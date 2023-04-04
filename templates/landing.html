@@ -14,6 +14,9 @@
 	<script src="../static/lib/d3-scale-chromatic.v1.min.js"></script>
 	<script src="../static/lib/topojson.v2.min.js"></script>
 	<script src="../static/lib/d3-tip.min.js"></script>
+    <script src="../lib/d3-simple-slider.min.js"></script>
+
+    <select id="Dropdown"></select>
 
     <div class="px-4 py-3 my-2 text-center">
             <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" width="92" height="92"/>
@@ -35,6 +38,8 @@ var margin = {
 
 var width = 960;   //-margin.right-margin.left;
 var height = 480;   //-margin.top-margin.bottom;
+
+var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
 
 var colorScheme = d3.schemeBlues[9];
 
