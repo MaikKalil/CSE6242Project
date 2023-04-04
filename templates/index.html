@@ -1,28 +1,68 @@
 <!doctype html>
 <head>
     <title>College Selection - Login</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            text-align: center;
+            background-color: #FFFFFF;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D6DBD4;
+            text-shadow: -1px -1px 0 #003057, 1px -1px 0 #003057, -1px 2px 0 #003057, 1px 2px 0 #003057;
+        }
+        img {
+            display: block;
+            margin: auto;
+            margin-bottom: 2rem;
+            width: 192px;
+            height: 192px;
+        }
+        label {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000;
+        }
+        input {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border: 2px solid #003057;
+            border-radius: 5px;
+            max-width: 256px;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        button {
+            font-size: 1.5rem;
+            padding: 0.5rem 1.5rem;
+            background-color: #003057; /* Georgia Tech Navy Blue */
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+        }
+        button:hover {
+            background-color: #EAAA00;
+        }
+    </style>
 </head>
 <html>
    <body>
      <main>
-        <div class="px-4 py-3 my-2 text-center">
-            <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" width="192" height="192"/>
-            <!-- <img  src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
-            <h1 class="display-6 fw-bold text-primary">Welcome to College Selection Made Easy</h1>
-          </div>
-        <form method="post" action="{{url_for('hello')}}">
-            <div class="col-md-6 mx-auto text-center">
-                <label for="name" class="form-label fw-bold fs-5">Please enter your email address to continue</label>
-
-                <!-- <p class="lead mb-2">Could you please tell me your name?</p> -->
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center align-items-center my-1">
-                    <input type="text" class="form-control" id="name" name="name" style="max-width: 256px;">
-                  </div>            
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center my-2">
-                  <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Continue</button>
-                </div>            
+        <div>
+            <img src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" />
+            <h1>Welcome to College Selection Made Easy</h1>
+        </div>
+        <form method="post" action="{{url_for('login')}}">
+            <div>
+                <label for="name">Please enter a valid email address to continue:</label>
+                <input type="text" id="email" name="email" />
+            </div>
+            <div>
+                <button type="submit">Continue</button>
             </div>
         </form>
-     </main>      
+     </main>
    </body>
 </html>
