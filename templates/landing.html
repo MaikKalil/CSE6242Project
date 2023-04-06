@@ -6,9 +6,7 @@
 <title>
 	USA map
 </title>
-
 <link rel="stylesheet" href="/static/landing/style.css"/>
-
 <body>
 	<script src="../static/lib/d3.v5.min.js"></script>
 	<script src="../static/lib/d3-scale-chromatic.v1.min.js"></script>
@@ -16,11 +14,9 @@
 	<script src="../static/lib/d3-tip.min.js"></script>
     <script src="../lib/d3-simple-slider.min.js"></script>
 
-
     <div id = "t">
 		<p id="t-Filter">Filter1</p><div id="slider-filter"></div>
 	</div>
-
 
     <select id="Dropdown"></select>
 
@@ -32,75 +28,89 @@
                 It is nice to meet you!
             </p>
             <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg px-4 gap-3">Log Out</a>
-          </div>
+    </div>
+
+    <div id="left-panel">
+		<h2>Recommended Schools</h2>
+		<ol id="school-list"></ol>
+		<div id="school-list-nav">
+			<button id="school-list-prev">Previous</button>
+			<button id="school-list-next">Next</button>
+		</div>
+	</div>
 <script>
 
-var margin = {
-	left: 50,
-	right: 50,
-	bottom: 50,
-	top: 50
-};
+    var margin = {
+        left: 50,
+        right: 50,
+        bottom: 50,
+        top: 50
+    };
 
-var width = 960;   //-margin.right-margin.left;
-var height = 480;   //-margin.top-margin.bottom;
+    var width = 960;   //-margin.right-margin.left;
+    var height = 480;   //-margin.top-margin.bottom;
 
-var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
+    var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
 
-var colorScheme = d3.schemeBlues[9];
+    var colorScheme = d3.schemeBlues[9];
 
-var svg=d3
-	.select("body")
-	.append("svg")
-	.attr("width", width + margin.right + margin.left)
-	.attr("height",height + margin.top + margin.right)
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var svg=d3
+        .select("body")
+        .append("svg")
+        .attr("width", width + margin.right + margin.left)
+        .attr("height",height + margin.top + margin.right)
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var projection = d3.geoAlbersUsa()
-	.scale(800)
-	.translate([400, 200]);
+    var projection = d3.geoAlbersUsa()
+        .scale(800)
+        .translate([400, 200]);
 
-var path = d3.geoPath().projection(projection);
+    var path = d3.geoPath().projection(projection);
 
-var promises = [
-	d3.json("/static/landing/states-10m.json")
-]
+    var promises = [
+        d3.json("/static/landing/states-10m.json"),
+        //d3.csv("/static/landing/mock_rankings.csv")
+    ]
 
-Promise.all(promises).then(function(array) {
-	states_10m = array[0];
-	display(states_10m);
-});
+    Promise.all(promises).then(function(array) {
+        states_10m = array[0];
+        //var data = array[1];
+        display(states_10m);
+    });
 
-function display(states_10m){
+    // add 'data' after states_10m
+    function display(states_10m){
 
-	var tip = d3.tip()
-		.attr("class", "d3-tip")
-		.offset([0, 0])
-		.html("ToolTip");
-		
-	svg.call(tip);
+        var tip = d3.tip()
+            .attr("class", "d3-tip")
+            .offset([0, 0])
+            .html("ToolTip");
 
-	svg.append("g")
-		.attr("class", "states")
-		.selectAll("path")
-		.data(topojson.feature(
-			states_10m, 
-			states_10m.objects.states).features
-		)
-		.enter().append("path")
-		.attr("fill",colorScheme[0])
-		.attr("stroke", "#000")
-		.attr("d", path)
-		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
-}
+        svg.call(tip);
 
-	svg.append("text")
-		.attr("x", width-100)
-		.attr("y", height-100)
-		.style("font-size", "20px")
-		.attr("font-weight", "bold")
-		.text("USA map");
+        svg.append("g")
+            .attr("class", "states")
+            .attr("transform", "translate(" + (100) + ", 0)")
+            .selectAll("path")
+            .data(topojson.feature(
+                states_10m,
+                states_10m.objects.states).features
+            )
+            .enter().append("path")
+            .attr("fill",colorScheme[0])
+            .attr("stroke", "#000")
+            .attr("d", path)
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide);
+
+    }
+
+	{#svg.append("text")#}
+	{#	.attr("x", width-100)#}
+	{#	.attr("y", height-100)#}
+	{#	.style("font-size", "20px")#}
+	{#	.attr("font-weight", "bold")#}
+	{#	.text("USA map");#}
 
 </script>
 
