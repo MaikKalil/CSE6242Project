@@ -30,14 +30,18 @@
             <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg px-4 gap-3">Log Out</a>
     </div>
 
-    <div id="left-panel">
-		<h2>Recommended Schools</h2>
-		<ol id="school-list"></ol>
-		<div id="school-list-nav">
-			<button id="school-list-prev">Previous</button>
-			<button id="school-list-next">Next</button>
-		</div>
-	</div>
+    <div id="container" style="display: flex">
+        <div id="left-panel">
+            <h2>Recommended Schools</h2>
+            <ol id="school-list"></ol>
+            <div id="school-list-nav">
+                <button id="school-list-prev">Previous</button>
+                <button id="school-list-next">Next</button>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+
 <script>
 
     var margin = {
@@ -54,31 +58,151 @@
 
     var colorScheme = d3.schemeBlues[9];
 
-    var svg=d3
-        .select("body")
-        .append("svg")
-        .attr("width", width + margin.right + margin.left)
-        .attr("height",height + margin.top + margin.right)
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    {#var svg=d3#}
+    {#    .select("body")#}
+    {#    .append("svg")#}
+    {#    .attr("width", width + margin.right + margin.left)#}
+    {#    .attr("height",height + margin.top + margin.right)#}
+    {#    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");#}
+
+    var svg = d3.select("#map")
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("viewBox", "0 0 " + width + " " + height)
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
 
     var projection = d3.geoAlbersUsa()
-        .scale(800)
-        .translate([400, 200]);
+        .scale(1000)
+        .translate([ width / 2, height / 2]);
+
+    {#var projection = d3.geoMercator()#}
+    {#.center([-98, 40])#}
+    {#.scale(750)#}
+    {#.translate([width / 2 , height / 2]);#}
 
     var path = d3.geoPath().projection(projection);
 
     var promises = [
         d3.json("/static/landing/states-10m.json"),
-        //d3.csv("/static/landing/mock_rankings.csv")
+        d3.csv("/static/landing/mock_rankings.csv")
     ]
 
     Promise.all(promises).then(function(array) {
         states_10m = array[0];
-        //var data = array[1];
         display(states_10m);
+
+        var mock_data = array[1];
+
+        // Add circles for each school to the map
+        svg.selectAll("circle")
+          .data(mock_data)
+          .enter()
+          .append("circle")
+          .attr("cx", function(d) {
+              return projection([d.longitude, d.latitude])[0];
+          })
+          .attr("cy", function(d) {
+              return projection([d.longitude, d.latitude])[1];
+          })
+          .attr("r", 5)
+          .attr("fill", "steelblue")
+          .attr("opacity", 0.7)
+
+
+
+        // Sort the mock_data by rank_score in descending order
+        mock_data.sort(function(a, b) {
+            return b.rank_score - a.rank_score;
+        });
+
+        // Get a reference to the school-list <ol> element
+        var schoolList = d3.select("#school-list");
+
+        // Add the school names to the list
+        var schools = schoolList.selectAll("li")
+            .data(mock_data)
+            .enter()
+            .append("li");
+
+        schools.append("div")
+            .classed("school-name", true)
+            .html(function(d, i) {
+                return "<span class='rank' style='font-weight: bold; font-size: inherit;'>" + (i + 1) + ".</span> " + d.school_name;
+            });
+
+
+        schools.append("div")
+            .classed("school-details", true)
+            .append("ul")
+            .classed("sublist", true)
+            .selectAll("li")
+            .data(function(d) {
+                return [
+                    {label: "Average Tuition:", value: "$" + d.avg_tuition},
+                    {label: "Acceptance Rate:", value: d.acceptance_rate + "%"},
+                    {label: "Distance:", value: d.distance + " miles"}
+                ];
+            })
+            .enter()
+            .append("li")
+            .text(function(d) { return d.label + " " + d.value; });
+
+
+        // Define the number of items to show per page
+        var pageSize = 5;
+
+        // Define the current page number
+        var currentPage = 0;
+
+        // Define the navigation buttons
+        var prevButton = d3.select("#school-list-prev");
+        var nextButton = d3.select("#school-list-next");
+
+        // Define the update function for the school list
+        function updateSchoolList() {
+            // Hide all schools
+            schools.style("display", "none");
+
+            // Show the schools for the current page
+            schools.filter(function(d, i) {
+                    return i >= currentPage * pageSize && i < (currentPage + 1) * pageSize;
+            }).style("display", "block");
+
+            // Disable the previous button if we're on the first page
+            if (currentPage === 0) {
+                prevButton.attr("disabled", true);
+            } else {
+                prevButton.attr("disabled", null);
+            }
+
+            // Disable the next button if we're on the last page
+            if ((currentPage + 1) * pageSize >= schools.size()) {
+                nextButton.attr("disabled", true);
+            } else {
+                nextButton.attr("disabled", null);
+            }
+        }
+
+        // Add a click event listener to the previous button
+        prevButton.on("click", function() {
+            currentPage--;
+            updateSchoolList();
+        });
+
+        // Add a click event listener to the next button
+        nextButton.on("click", function() {
+            currentPage++;
+            updateSchoolList();
+        });
+
+        // Initialize the school list
+        updateSchoolList();
+
     });
 
-    // add 'data' after states_10m
+
     function display(states_10m){
 
         var tip = d3.tip()
@@ -90,7 +214,7 @@
 
         svg.append("g")
             .attr("class", "states")
-            .attr("transform", "translate(" + (100) + ", 0)")
+            .attr("transform", "translate(" + (0) + ", 0)")
             .selectAll("path")
             .data(topojson.feature(
                 states_10m,
