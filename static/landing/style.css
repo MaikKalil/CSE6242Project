@@ -62,7 +62,11 @@
 
 #left-panel {
   width: 30%;
+  border: 2px solid #003057;
+  padding: 10px;
+  border-radius: 10px;
 }
+
 
 #map {
   width: 100%;
@@ -85,5 +89,24 @@
 .school-details {
     font-weight: normal;
 }
+
+.recommended-schools ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.recommended-schools li {
+  padding: 4px 0;
+  border-bottom: 1px solid black;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.recommended-schools li * {
+  border-bottom: none;
+  padding: 0px 0
+}
+
 
 

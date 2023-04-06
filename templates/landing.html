@@ -31,7 +31,7 @@
     </div>
 
     <div id="container" style="display: flex">
-        <div id="left-panel">
+        <div id="left-panel" class="recommended-schools">
             <h2>Recommended Schools</h2>
             <ol id="school-list"></ol>
             <div id="school-list-nav">
@@ -84,6 +84,21 @@
 
     var path = d3.geoPath().projection(projection);
 
+    // Create a tip object
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<strong>Name:</strong> " + d.school_name + "<br>" +
+                   "<strong>City:</strong> " + d.city + "<br>" +
+                   "<strong>State:</strong> " + d.state;
+        });
+
+    // Attach the tip to your SVG
+    svg.call(tip);
+
+
+
     var promises = [
         d3.json("/static/landing/states-10m.json"),
         d3.csv("/static/landing/mock_rankings.csv")
@@ -106,9 +121,19 @@
           .attr("cy", function(d) {
               return projection([d.longitude, d.latitude])[1];
           })
-          .attr("r", 5)
+          .attr("r", 6)
           .attr("fill", "steelblue")
-          .attr("opacity", 0.7)
+          .attr("opacity", 0.9)
+          .attr("stroke", "black")
+          .attr("stroke-width", 1)
+          .on("mouseover", function(d) {
+            tip.show(d);
+           })
+          .on("mouseout", function(d) {
+            tip.hide(d);
+           });
+
+
 
 
 
@@ -205,12 +230,16 @@
 
     function display(states_10m){
 
-        var tip = d3.tip()
-            .attr("class", "d3-tip")
-            .offset([0, 0])
-            .html("ToolTip");
+        {#var tip = d3.tip()#}
+        {#    .attr("class", "d3-tip")#}
+        {#    .offset([-10, 0])#}
+        {#    .html(function(d) {#}
+        {#        return "<strong>" + d.school_name + "</strong><br>" + d.city + ", " + d.state;#}
+        {#    });#}
+        {##}
+        {#svg.call(tip);#}
 
-        svg.call(tip);
+
 
         svg.append("g")
             .attr("class", "states")
@@ -224,16 +253,10 @@
             .attr("fill",colorScheme[0])
             .attr("stroke", "#000")
             .attr("d", path)
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide);
+            {#.on('mouseover', tip.show)#}
+            {#.on('mouseout', tip.hide);#}
     }
 
-	{#svg.append("text")#}
-	{#	.attr("x", width-100)#}
-	{#	.attr("y", height-100)#}
-	{#	.style("font-size", "20px")#}
-	{#	.attr("font-weight", "bold")#}
-	{#	.text("USA map");#}
 
 </script>
 
