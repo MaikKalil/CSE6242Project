@@ -1,0 +1,31 @@
+﻿unit_id,school_name,avg_tuition,acceptance_rate,distance,rank_score,latitude,longitude,city,state,zip
+183026,Southern New Hampshire University,50505,77,1800,45,43.038922,-71.451842,Manchester,NH,03106-1045
+433387,Western Governors University,13790,73,1200,54,40.68481,-111.869752,Salt Lake City,UT,84107
+495767,The Pennsylvania State University,33960,47,40,65,40.7965,-77.862848,University Park,PA,16802-1503
+484613,University of Phoenix-Arizona,18562,69,500,86,33.41128,-112.012761,Phoenix,AZ,85040
+104151,Arizona State University Campus Immersion,27056,51,800,73,33.417721,-111.934383,Tempe,AZ,85287
+104717,Grand Canyon University,31376,70,130,33,33.513231,-112.129929,Phoenix,AZ,85017
+132903,University of Central Florida,21309,73,5,8,28.602159,-81.200889,Orlando,FL,32816
+228723,Texas A & M University-College Station,29920,35,1000,10,30.618726,-96.336475,College Station,TX,77843-1248
+150987,Ivy Tech Community College,13149,76,700,98,39.803753,-86.158213,Indianapolis,IN,46208-5752
+227182,Lone Star College System,13738,55,750,76,30.18737,-95.488103,The Woodlands,TX,77381-4399
+225423,Houston Community College,9752,51,1500,93,29.742114,-95.377319,Houston,TX,77002
+232557,Liberty University,40567,27,250,40,37.350232,-79.18222,Lynchburg,VA,24515
+224615,Dallas College,10819,35,200,31,32.766319,-96.794036,Dallas,TX,75215-3604
+204796,Ohio State University-Main Campus,27202,55,7,68,39.999324,-83.014853,Columbus,OH,43210
+163204,University of Maryland Global Campus,19764,29,3,7,38.912706,-76.847584,Adelphi,MD,20783-8010
+142522,Brigham Young University-Idaho,12381,24,500,84,43.818408,-111.782431,Rexburg,ID,83460-1690
+228547,Tarrant County College District,10851,54,700,14,32.747495,-97.327941,Fort Worth,TX,76102
+135717,Miami Dade College,11345,23,600,36,25.777717,-80.190856,Miami,FL,33132-2204
+133951,Florida International University,19384,46,650,8,25.75732,-80.373928,Miami,FL,33199
+483124,Arizona State University Digital Immersion,NULL,35,850,85,33.463786,-111.923861,Scottsdale,AZ,85257
+228778,The University of Texas at Austin,27397,39,350,43,30.282825,-97.738273,Austin,TX,78705
+203331,Eastern Gateway Community College,8216,34,660,78,40.376056,-80.672337,Steubenville,OH,43952-3598
+449339,American Public University System,16569,75,600,85,39.287826,-77.860121,Charles Town,WV,25414
+171100,Michigan State University,28626,50,760,56,42.73212,-84.476111,East Lansing,MI,48824-1046
+225511,University of Houston,23361,43,890,52,29.720393,-95.343537,Houston,TX,77204-2018
+137351,University of South Florida,21134,21,650,5,28.061458,-82.413232,Tampa,FL,33620-9951
+138187,Valencia College,10735,65,1700,88,28.520898,-81.471466,Orlando,FL,32835
+110565,California State University-Fullerton,17791,62,760,45,33.881506,-117.885446,Fullerton,CA,92831-3599
+486840,Kennesaw State University,25059,15,735,56,34.038807,-84.583052,Kennesaw,GA,30144
+232946,Northern Virginia Community College,15391,,,,38.833361,-77.236718,Annandale,VA,22003-3796

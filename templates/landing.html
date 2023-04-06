@@ -6,9 +6,7 @@
 <title>
 	USA map
 </title>
-
 <link rel="stylesheet" href="/static/landing/style.css"/>
-
 <body>
 	<script src="../static/lib/d3.v5.min.js"></script>
 	<script src="../static/lib/d3-scale-chromatic.v1.min.js"></script>
@@ -16,11 +14,9 @@
 	<script src="../static/lib/d3-tip.min.js"></script>
     <script src="../lib/d3-simple-slider.min.js"></script>
 
-
     <div id = "t">
 		<p id="t-Filter">Filter1</p><div id="slider-filter"></div>
 	</div>
-
 
     <select id="Dropdown"></select>
 
@@ -32,75 +28,235 @@
                 It is nice to meet you!
             </p>
             <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg px-4 gap-3">Log Out</a>
-          </div>
+    </div>
+
+    <div id="container" style="display: flex">
+        <div id="left-panel" class="recommended-schools">
+            <h2>Recommended Schools</h2>
+            <ol id="school-list"></ol>
+            <div id="school-list-nav">
+                <button id="school-list-prev">Previous</button>
+                <button id="school-list-next">Next</button>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+
 <script>
 
-var margin = {
-	left: 50,
-	right: 50,
-	bottom: 50,
-	top: 50
-};
+    var margin = {
+        left: 50,
+        right: 50,
+        bottom: 50,
+        top: 50
+    };
 
-var width = 960;   //-margin.right-margin.left;
-var height = 480;   //-margin.top-margin.bottom;
+    var width = 960;   //-margin.right-margin.left;
+    var height = 480;   //-margin.top-margin.bottom;
 
-var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
+    var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
 
-var colorScheme = d3.schemeBlues[9];
+    var colorScheme = d3.schemeBlues[9];
 
-var svg=d3
-	.select("body")
-	.append("svg")
-	.attr("width", width + margin.right + margin.left)
-	.attr("height",height + margin.top + margin.right)
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    {#var svg=d3#}
+    {#    .select("body")#}
+    {#    .append("svg")#}
+    {#    .attr("width", width + margin.right + margin.left)#}
+    {#    .attr("height",height + margin.top + margin.right)#}
+    {#    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");#}
 
-var projection = d3.geoAlbersUsa()
-	.scale(800)
-	.translate([400, 200]);
+    var svg = d3.select("#map")
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("viewBox", "0 0 " + width + " " + height)
+    .attr("preserveAspectRatio", "xMidYMid meet");
 
-var path = d3.geoPath().projection(projection);
 
-var promises = [
-	d3.json("/static/landing/states-10m.json")
-]
+    var projection = d3.geoAlbersUsa()
+        .scale(1000)
+        .translate([ width / 2, height / 2]);
 
-Promise.all(promises).then(function(array) {
-	states_10m = array[0];
-	display(states_10m);
-});
+    {#var projection = d3.geoMercator()#}
+    {#.center([-98, 40])#}
+    {#.scale(750)#}
+    {#.translate([width / 2 , height / 2]);#}
 
-function display(states_10m){
+    var path = d3.geoPath().projection(projection);
 
-	var tip = d3.tip()
-		.attr("class", "d3-tip")
-		.offset([0, 0])
-		.html("ToolTip");
-		
-	svg.call(tip);
+    // Create a tip object
+    var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<strong>Name:</strong> " + d.school_name + "<br>" +
+                   "<strong>City:</strong> " + d.city + "<br>" +
+                   "<strong>State:</strong> " + d.state;
+        });
 
-	svg.append("g")
-		.attr("class", "states")
-		.selectAll("path")
-		.data(topojson.feature(
-			states_10m, 
-			states_10m.objects.states).features
-		)
-		.enter().append("path")
-		.attr("fill",colorScheme[0])
-		.attr("stroke", "#000")
-		.attr("d", path)
-		.on('mouseover', tip.show)
-		.on('mouseout', tip.hide);
-}
+    // Attach the tip to your SVG
+    svg.call(tip);
 
-	svg.append("text")
-		.attr("x", width-100)
-		.attr("y", height-100)
-		.style("font-size", "20px")
-		.attr("font-weight", "bold")
-		.text("USA map");
+
+
+    var promises = [
+        d3.json("/static/landing/states-10m.json"),
+        d3.csv("/static/landing/mock_rankings.csv")
+    ]
+
+    Promise.all(promises).then(function(array) {
+        states_10m = array[0];
+        display(states_10m);
+
+        var mock_data = array[1];
+
+        // Add circles for each school to the map
+        svg.selectAll("circle")
+          .data(mock_data)
+          .enter()
+          .append("circle")
+          .attr("cx", function(d) {
+              return projection([d.longitude, d.latitude])[0];
+          })
+          .attr("cy", function(d) {
+              return projection([d.longitude, d.latitude])[1];
+          })
+          .attr("r", 6)
+          .attr("fill", "steelblue")
+          .attr("opacity", 0.9)
+          .attr("stroke", "black")
+          .attr("stroke-width", 1)
+          .on("mouseover", function(d) {
+            tip.show(d);
+           })
+          .on("mouseout", function(d) {
+            tip.hide(d);
+           });
+
+
+
+
+
+        // Sort the mock_data by rank_score in descending order
+        mock_data.sort(function(a, b) {
+            return b.rank_score - a.rank_score;
+        });
+
+        // Get a reference to the school-list <ol> element
+        var schoolList = d3.select("#school-list");
+
+        // Add the school names to the list
+        var schools = schoolList.selectAll("li")
+            .data(mock_data)
+            .enter()
+            .append("li");
+
+        schools.append("div")
+            .classed("school-name", true)
+            .html(function(d, i) {
+                return "<span class='rank' style='font-weight: bold; font-size: inherit;'>" + (i + 1) + ".</span> " + d.school_name;
+            });
+
+
+        schools.append("div")
+            .classed("school-details", true)
+            .append("ul")
+            .classed("sublist", true)
+            .selectAll("li")
+            .data(function(d) {
+                return [
+                    {label: "Average Tuition:", value: "$" + d.avg_tuition},
+                    {label: "Acceptance Rate:", value: d.acceptance_rate + "%"},
+                    {label: "Distance:", value: d.distance + " miles"}
+                ];
+            })
+            .enter()
+            .append("li")
+            .text(function(d) { return d.label + " " + d.value; });
+
+
+        // Define the number of items to show per page
+        var pageSize = 5;
+
+        // Define the current page number
+        var currentPage = 0;
+
+        // Define the navigation buttons
+        var prevButton = d3.select("#school-list-prev");
+        var nextButton = d3.select("#school-list-next");
+
+        // Define the update function for the school list
+        function updateSchoolList() {
+            // Hide all schools
+            schools.style("display", "none");
+
+            // Show the schools for the current page
+            schools.filter(function(d, i) {
+                    return i >= currentPage * pageSize && i < (currentPage + 1) * pageSize;
+            }).style("display", "block");
+
+            // Disable the previous button if we're on the first page
+            if (currentPage === 0) {
+                prevButton.attr("disabled", true);
+            } else {
+                prevButton.attr("disabled", null);
+            }
+
+            // Disable the next button if we're on the last page
+            if ((currentPage + 1) * pageSize >= schools.size()) {
+                nextButton.attr("disabled", true);
+            } else {
+                nextButton.attr("disabled", null);
+            }
+        }
+
+        // Add a click event listener to the previous button
+        prevButton.on("click", function() {
+            currentPage--;
+            updateSchoolList();
+        });
+
+        // Add a click event listener to the next button
+        nextButton.on("click", function() {
+            currentPage++;
+            updateSchoolList();
+        });
+
+        // Initialize the school list
+        updateSchoolList();
+
+    });
+
+
+    function display(states_10m){
+
+        {#var tip = d3.tip()#}
+        {#    .attr("class", "d3-tip")#}
+        {#    .offset([-10, 0])#}
+        {#    .html(function(d) {#}
+        {#        return "<strong>" + d.school_name + "</strong><br>" + d.city + ", " + d.state;#}
+        {#    });#}
+        {##}
+        {#svg.call(tip);#}
+
+
+
+        svg.append("g")
+            .attr("class", "states")
+            .attr("transform", "translate(" + (0) + ", 0)")
+            .selectAll("path")
+            .data(topojson.feature(
+                states_10m,
+                states_10m.objects.states).features
+            )
+            .enter().append("path")
+            .attr("fill",colorScheme[0])
+            .attr("stroke", "#000")
+            .attr("d", path)
+            {#.on('mouseover', tip.show)#}
+            {#.on('mouseout', tip.hide);#}
+    }
+
 
 </script>
 
