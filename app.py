@@ -21,7 +21,7 @@ def login():
    if email and '@' in email:
        print('Request for landing page received with email=%s' % email)
        username = email.split('@')[0]  # split the email at "@" and return only the first part
-       user_id = int(hashlib.sha256(email.encode('utf-8')).hexdigest(), 16) % 10**8 # generate a unique numeric ID
+       user_id = int(hashlib.sha256(email.lower().encode('utf-8')).hexdigest(), 16) % 10**8 # generate a unique numeric ID
        #Log email to user_id relationship to user table to later identify user rankings
        with sqlite3.connect(db_path) as conn:
            cur = conn.cursor()
@@ -31,6 +31,13 @@ def login():
    else:
        print('Request for landing page received with no or invalid email -- redirecting')
        return redirect(url_for('index'))
+
+def features_dict(feature1, feature2, feature3):
+    featuresDict = {}
+    featuresDict['feature1']= 'OMENRUP_PELL_NFT_POOLED_SUPP'
+    featuresDict['feature2']= 'OMENRYP_PELL_FT_POOLED_SUPP'
+    featuresDict['feature3']= 'OMENRAP_PELL_FT_POOLED_SUPP'
+    return featuresDict
 
 
 if __name__ == '__main__':
