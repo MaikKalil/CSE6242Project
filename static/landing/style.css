@@ -58,7 +58,6 @@
 
 #container {
   display: flex;
-  width: 90%;
   padding: 4px
 }
 
@@ -123,5 +122,8 @@
   padding: 0px;
   font-size:  14px;
 }
+
+
+
 
 
