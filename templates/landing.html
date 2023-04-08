@@ -13,10 +13,10 @@
 			height: 100px;
 			background-color: #D6DBD4;
             display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px;
-        }
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            }
 
         .logo {
             margin-right: 20px;
@@ -25,6 +25,7 @@
         .title {
             margin: 0;
             text-align: center;
+            flex-grow: 1;
         }
 
         .logout-container{
@@ -39,36 +40,65 @@
 
 		/* Region 2 */
 		.region2 {
-			position: relative;
-			top: 300px;
-			left: 0;
-			height: calc(100vh - 200px - 300px);
-			width: 300px;
-			background-color: #aaa;
-			float: left;
-		}
+            height: calc(100vh - 100px);
+            width: 35%;
+            background-color: #aaa;
+            float: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+        }
 
 		/* Region 3 */
 		.region3 {
-			position: relative;
-			top: 300px;
-			left: 300px;
-			height: calc(100vh - 200px - 300px);
-			width: calc(100% - 300px);
-			background-color: #999;
-			float: left;
-		}
+            height: calc(75% - 60px);
+            width: calc(65% - 20px);
+            background-color: #999;
+            float: left;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
 
 		/* Region 4 */
 		.region4 {
-			position: relative;
-			top: 600px;
-			left: 0;
-			height: calc(100vh - 200px - 600px);
-			width: 300px;
-			background-color: #777;
-			float: left;
-		}
+            height: calc(25% - 20px);
+            width: calc(75% - 20px);
+            background-color: #777;
+            float: left;
+            margin-left: 20px;
+        }
+
+        /* Form */
+        form {
+            width: 40%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+
+        form > div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: inline-block;
+            width: 120px;
+            text-align: left;
+            margin-right: 10px;
+        }
+
+        input[type="text"], select {
+            width: 200px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+
 	</style>
 </head>
 <link rel="stylesheet" href="/static/landing/style.css"/>
@@ -93,25 +123,13 @@
     </div>
 
     <div id="container" style="display: flex">
-        <div id="left-panel" class="recommended-schools">
-            <h2>Recommended Schools</h2>
-            <ol id="school-list"></ol>
-            <div id="school-list-nav">
-                <button id="school-list-prev">Previous</button>
-                <button id="school-list-next">Next</button>
-            </div>
-        </div>
-        <div id="map"></div>
-    </div>
-
-    <form method="post" action="{{url_for('update')}}">
+        <form id="form" method="post" action="{{url_for('update')}}">
             <div>
                 <label for="name">Home Zip Code:</label>
                 <input type="text" id="zip" name="zip" {% if text_default %}value="{{ zip }}"{% endif %} />
             </div>
             <div>
                 <label for="name">Distance Preference:</label>
-
                 <select id="zip_pref" name="zip_pref">
                     <option value="1" {% if default_selected['zip_pref'] == '1' %}selected{% endif %}>1 Equally</option>
                     <option value="2" {% if default_selected['zip_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
@@ -152,6 +170,22 @@
                 <button type="submit">Update</button>
             </div>
     </form>
+        <div id="right_container" style="display: flex;">
+            <div id="map" style="width: 100%; height:70%"></div>
+            <div id="left-panel" class="recommended-schools" style="width: 100%; height: calc(35% - 20px); margin-top: 20px;">
+                <h2>Recommended Schools</h2>
+                <ol id="school-list"></ol>
+                <div id="school-list-nav">
+                    <button id="school-list-prev">Previous</button>
+                    <button id="school-list-next">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 <script>
 
