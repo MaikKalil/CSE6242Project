@@ -2,10 +2,75 @@
 <meta charset="utf-8">
 <head>
     <title>College Selection Made Easy</title>
+    <style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		/* Region 1 */
+		.region1 {
+			height: 100px;
+			background-color: #D6DBD4;
+            display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        }
+
+        .logo {
+            margin-right: 20px;
+        }
+
+        .title {
+            margin: 0;
+            text-align: center;
+        }
+
+        .logout-container{
+            text-align: right;
+        }
+
+        .logout-link,
+        .about-link {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+		/* Region 2 */
+		.region2 {
+			position: relative;
+			top: 300px;
+			left: 0;
+			height: calc(100vh - 200px - 300px);
+			width: 300px;
+			background-color: #aaa;
+			float: left;
+		}
+
+		/* Region 3 */
+		.region3 {
+			position: relative;
+			top: 300px;
+			left: 300px;
+			height: calc(100vh - 200px - 300px);
+			width: calc(100% - 300px);
+			background-color: #999;
+			float: left;
+		}
+
+		/* Region 4 */
+		.region4 {
+			position: relative;
+			top: 600px;
+			left: 0;
+			height: calc(100vh - 200px - 600px);
+			width: 300px;
+			background-color: #777;
+			float: left;
+		}
+	</style>
 </head>
-<title>
-	USA map
-</title>
 <link rel="stylesheet" href="/static/landing/style.css"/>
 <body>
 	<script src="../static/lib/d3.v5.min.js"></script>
@@ -14,20 +79,17 @@
 	<script src="../static/lib/d3-tip.min.js"></script>
     <script src="../lib/d3-simple-slider.min.js"></script>
 
-    <div id = "t">
-		<p id="t-Filter">Filter1</p><div id="slider-filter"></div>
-	</div>
 
-    <select id="Dropdown"></select>
+    <div class="region1">
+            <img class="logo" src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" width="120" height="120"/>
 
-    <div class="px-4 py-3 my-2 text-center">
-            <img class="d-block mx-auto mb-4" src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" width="92" height="92"/>
-            <!-- <img  src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57"> -->
-            <h1 class="display-6 fw-bold">Hello {{user}}</h1>
-            <p class="fs-5">
-                It is nice to meet you!
-            </p>
-            <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg px-4 gap-3">Log Out</a>
+            <h1 class="title">COLLEGE SELECTION MADE EASY</h1>
+            <div class="logout-container">
+                <h3>{{user}}</h3>
+                <a href="{{ url_for('index') }}" class="logout-link">Log Out</a>
+                <br>
+                <a href="https://github.com/MaikKalil/CSE6242Project" class="about-link">About</a>
+            </div>
     </div>
 
     <div id="container" style="display: flex">
@@ -51,7 +113,6 @@
                 <label for="name">Distance Preference:</label>
 
                 <select id="zip_pref" name="zip_pref">
-                    <option value="0" {% if default_selected['zip_pref'] == '0' %}selected{% endif %}> </option>
                     <option value="1" {% if default_selected['zip_pref'] == '1' %}selected{% endif %}>1 Equally</option>
                     <option value="2" {% if default_selected['zip_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
                     <option value="3" {% if default_selected['zip_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
@@ -75,7 +136,6 @@
             <div>
                 <label for="name">Degree Preference:</label>
                 <select id="degree_pref" name="degree_pref">
-                    <option value="0" {% if default_selected['degree_pref'] == '0' %}selected{% endif %}> </option>
                     <option value="1" {% if default_selected['degree_pref'] == '1' %}selected{% endif %}>1 Equally</option>
                     <option value="2" {% if default_selected['degree_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
                     <option value="3" {% if default_selected['degree_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
