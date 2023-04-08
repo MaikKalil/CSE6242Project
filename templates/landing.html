@@ -38,37 +38,6 @@
             margin-left: 10px;
         }
 
-		/* Region 2 */
-		.region2 {
-            height: calc(100vh - 100px);
-            width: 35%;
-            background-color: #aaa;
-            float: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 20px;
-        }
-
-		/* Region 3 */
-		.region3 {
-            height: calc(75% - 60px);
-            width: calc(65% - 20px);
-            background-color: #999;
-            float: left;
-            margin-left: 20px;
-            margin-bottom: 20px;
-        }
-
-		/* Region 4 */
-		.region4 {
-            height: calc(25% - 20px);
-            width: calc(75% - 20px);
-            background-color: #777;
-            float: left;
-            margin-left: 20px;
-        }
-
         /* Form */
         form {
             width: 40%;
@@ -89,6 +58,7 @@
             width: 120px;
             text-align: left;
             margin-right: 10px;
+            padding: 15px;
         }
 
         input[type="text"], select {
@@ -97,6 +67,7 @@
 
         button {
             margin-top: 10px;
+            margin-left: 15px;
         }
 
 	</style>
@@ -125,8 +96,16 @@
     <div id="container" style="display: flex">
         <form id="form" method="post" action="{{url_for('update')}}">
             <div>
+                <label for="name">States:</label>
+                <select id="states" name="states" multiple>
+                    {%  for state in states %}
+                        <option value="{{ state }}" {% if state in default_selected['states'] %}selected{% endif %}>{{ state }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
                 <label for="name">Home Zip Code:</label>
-                <input type="text" id="zip" name="zip" {% if text_default %}value="{{ zip }}"{% endif %} />
+                <input type="text" id="zip" name="zip" {% if text_default %}value="{{ zip }}"{% endif %} maxlength="5" pattern="\d{5}" required/>
             </div>
             <div>
                 <label for="name">Distance Preference:</label>
@@ -145,11 +124,20 @@
             </div>
             <div>
                 <label for="name">Max Distance:</label>
-                <input type="number" id="zip_dist" name="zip_dist" {% if text_default %}value="{{ zip_dist }}"{% endif %} />
+                <input type="number" id="zip_dist" name="zip_dist" {% if text_default %}value="{{ zip_dist }}"{% endif %} min="0" required />
             </div>
             <div>
                 <label for="name">Degree:</label>
-                <input type="text" id="degree" name="degree" {% if text_default %}value="{{ degree }}"{% endif %} />
+                <select id="degree" name="degree">
+                    <option value="1" {% if default_selected['degree'] == '1' %}selected{% endif %}>1 Undergraduate Certificate or Diploma</option>
+                    <option value="2" {% if default_selected['degree'] == '2' %}selected{% endif %}>2 Associate's Degree</option>
+                    <option value="3" {% if default_selected['degree'] == '3' %}selected{% endif %}>3 Bachelor’s Degree</option>
+                    <option value="4" {% if default_selected['degree'] == '4' %}selected{% endif %}>4 Post-baccalaureate Certificate</option>
+                    <option value="5" {% if default_selected['degree'] == '5' %}selected{% endif %}>5 Master's Degree</option>
+                    <option value="6" {% if default_selected['degree'] == '6' %}selected{% endif %}>6 Doctoral Degree</option>
+                    <option value="7" {% if default_selected['degree'] == '7' %}selected{% endif %}>7 First Professional Degree</option>
+                    <option value="8" {% if default_selected['degree'] == '8' %}selected{% endif %}>8 Graduate/Professional Certificate</option>
+                </select>
             </div>
             <div>
                 <label for="name">Degree Preference:</label>
