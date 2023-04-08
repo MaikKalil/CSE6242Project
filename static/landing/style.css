@@ -58,8 +58,8 @@
 
 #container {
   display: flex;
-  width: 90%
-
+  width: 90%;
+  padding: 4px
 }
 
 #left-panel {
