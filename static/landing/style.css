@@ -58,6 +58,7 @@
 
 #container {
   display: flex;
+  width: 90%
 
 }
 
@@ -66,7 +67,8 @@
   height: calc(35% - 20px);
   margin-top: 20px;
   border: 2px solid #003057;
-  border-radius: 10px;
+  border-radius: 4px;
+  padding: 8px;
 }
 
 #right_container {
@@ -98,6 +100,11 @@
 }
 
 .recommended-schools ol {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -105,15 +112,16 @@
 
 .recommended-schools li {
   padding: 4px 0;
-  border-bottom: 1px solid black;
   width: 80%;
   margin: 0 auto;
+  font-size: 16px;
 }
+
 
 .recommended-schools li * {
   border-bottom: none;
-  padding: 0px 0
+  padding: 0px;
+  font-size:  14px;
 }
-
 
 

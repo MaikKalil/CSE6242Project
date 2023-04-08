@@ -60,6 +60,7 @@
             margin-bottom: 20px;
         }
 
+
 		/* Region 4 */
 		.region4 {
             height: calc(25% - 20px);
@@ -78,6 +79,7 @@
             justify-content: flex-start;
             margin-top: 20px;
             align-items: flex-start;
+            padding: 5px;
         }
 
         form > div {
@@ -108,7 +110,6 @@
 	<script src="../static/lib/topojson.v2.min.js"></script>
 	<script src="../static/lib/d3-tip.min.js"></script>
     <script src="../lib/d3-simple-slider.min.js"></script>
-
 
     <div class="region1">
             <img class="logo" src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" width="120" height="120"/>
@@ -172,7 +173,7 @@
     </form>
         <div id="right_container" style="display: flex;">
             <div id="map" style="width: 100%; height:70%"></div>
-            <div id="left-panel" class="recommended-schools" style="width: 100%; height: calc(35% - 20px); margin-top: 20px;">
+            <div id="left-panel" class="recommended-schools" style="width: 95%; height: calc(35% - 20px); margin-top: 20px;">
                 <h2>Recommended Schools</h2>
                 <ol id="school-list"></ol>
                 <div id="school-list-nav">
@@ -182,9 +183,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
 <script>
@@ -203,13 +201,6 @@
 
     var colorScheme = d3.schemeBlues[9];
 
-    {#var svg=d3#}
-    {#    .select("body")#}
-    {#    .append("svg")#}
-    {#    .attr("width", width + margin.right + margin.left)#}
-    {#    .attr("height",height + margin.top + margin.right)#}
-    {#    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");#}
-
     var svg = d3.select("#map")
     .append("svg")
     .attr("width", "100%")
@@ -222,11 +213,6 @@
         .scale(1000)
         .translate([ width / 2, height / 2]);
 
-    {#var projection = d3.geoMercator()#}
-    {#.center([-98, 40])#}
-    {#.scale(750)#}
-    {#.translate([width / 2 , height / 2]);#}
-
     var path = d3.geoPath().projection(projection);
 
     // Create a tip object
@@ -237,11 +223,11 @@
             return "<strong>Name:</strong> " + d.school_name + "<br>" +
                    "<strong>City:</strong> " + d.city + "<br>" +
                    "<strong>State:</strong> " + d.state;
+            //
         });
 
     // Attach the tip to your SVG
     svg.call(tip);
-
 
 
     var promises = [
@@ -277,10 +263,6 @@
           .on("mouseout", function(d) {
             tip.hide(d);
            });
-
-
-
-
 
         // Sort the mock_data by rank_score in descending order
         mock_data.sort(function(a, b) {
@@ -372,19 +354,7 @@
 
     });
 
-
     function display(states_10m){
-
-        {#var tip = d3.tip()#}
-        {#    .attr("class", "d3-tip")#}
-        {#    .offset([-10, 0])#}
-        {#    .html(function(d) {#}
-        {#        return "<strong>" + d.school_name + "</strong><br>" + d.city + ", " + d.state;#}
-        {#    });#}
-        {##}
-        {#svg.call(tip);#}
-
-
 
         svg.append("g")
             .attr("class", "states")
@@ -398,8 +368,6 @@
             .attr("fill",colorScheme[0])
             .attr("stroke", "#000")
             .attr("d", path)
-            {#.on('mouseover', tip.show)#}
-            {#.on('mouseout', tip.hide);#}
     }
 
 
