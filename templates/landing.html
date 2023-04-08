@@ -13,10 +13,10 @@
 			height: 100px;
 			background-color: #D6DBD4;
             display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px;
-        }
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            }
 
         .logo {
             margin-right: 20px;
@@ -25,6 +25,7 @@
         .title {
             margin: 0;
             text-align: center;
+            flex-grow: 1;
         }
 
         .logout-container{
@@ -39,36 +40,68 @@
 
 		/* Region 2 */
 		.region2 {
-			position: relative;
-			top: 300px;
-			left: 0;
-			height: calc(100vh - 200px - 300px);
-			width: 300px;
-			background-color: #aaa;
-			float: left;
-		}
+            height: calc(100vh - 100px);
+            width: 35%;
+            background-color: #aaa;
+            float: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+        }
 
 		/* Region 3 */
 		.region3 {
-			position: relative;
-			top: 300px;
-			left: 300px;
-			height: calc(100vh - 200px - 300px);
-			width: calc(100% - 300px);
-			background-color: #999;
-			float: left;
-		}
+            height: calc(75% - 60px);
+            width: calc(65% - 20px);
+            background-color: #999;
+            float: left;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
 
 		/* Region 4 */
 		.region4 {
-			position: relative;
-			top: 600px;
-			left: 0;
-			height: calc(100vh - 200px - 600px);
-			width: 300px;
-			background-color: #777;
-			float: left;
-		}
+            height: calc(25% - 20px);
+            width: calc(75% - 20px);
+            background-color: #777;
+            float: left;
+            margin-left: 20px;
+        }
+
+        /* Form */
+        form {
+            width: 40%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-top: 20px;
+            align-items: flex-start;
+            padding: 5px;
+        }
+
+        form > div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: inline-block;
+            width: 120px;
+            text-align: left;
+            margin-right: 10px;
+            padding: 15px;
+        }
+
+        input[type="text"], select {
+            width: 200px;
+        }
+
+        button {
+            margin-top: 10px;
+            margin-left: 15px;
+        }
+
 	</style>
 </head>
 <link rel="stylesheet" href="/static/landing/style.css"/>
@@ -78,7 +111,6 @@
 	<script src="../static/lib/topojson.v2.min.js"></script>
 	<script src="../static/lib/d3-tip.min.js"></script>
     <script src="../lib/d3-simple-slider.min.js"></script>
-
 
     <div class="region1">
             <img class="logo" src="{{ url_for('static', filename='images/CollegeSelectionLogoGold.svg') }}" alt="Logo" width="120" height="120"/>
@@ -93,25 +125,21 @@
     </div>
 
     <div id="container" style="display: flex">
-        <div id="left-panel" class="recommended-schools">
-            <h2>Recommended Schools</h2>
-            <ol id="school-list"></ol>
-            <div id="school-list-nav">
-                <button id="school-list-prev">Previous</button>
-                <button id="school-list-next">Next</button>
+        <form id="form" method="post" action="{{url_for('update')}}">
+            <div>
+                <label for="name">States:</label>
+                <select id="states" name="states" multiple>
+                    {%  for state in states %}
+                        <option value="{{ state }}" {% if state in default_selected['states'] %}selected{% endif %}>{{ state }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>
-        <div id="map"></div>
-    </div>
-
-    <form method="post" action="{{url_for('update')}}">
             <div>
                 <label for="name">Home Zip Code:</label>
-                <input type="text" id="zip" name="zip" {% if text_default %}value="{{ zip }}"{% endif %} />
+                <input type="text" id="zip" name="zip" {% if text_default %}value="{{ zip }}"{% endif %} maxlength="5" pattern="\d{5}" required/>
             </div>
             <div>
                 <label for="name">Distance Preference:</label>
-
                 <select id="zip_pref" name="zip_pref">
                     <option value="1" {% if default_selected['zip_pref'] == '1' %}selected{% endif %}>1 Equally</option>
                     <option value="2" {% if default_selected['zip_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
@@ -127,11 +155,20 @@
             </div>
             <div>
                 <label for="name">Max Distance:</label>
-                <input type="number" id="zip_dist" name="zip_dist" {% if text_default %}value="{{ zip_dist }}"{% endif %} />
+                <input type="number" id="zip_dist" name="zip_dist" {% if text_default %}value="{{ zip_dist }}"{% endif %} min="0" required />
             </div>
             <div>
                 <label for="name">Degree:</label>
-                <input type="text" id="degree" name="degree" {% if text_default %}value="{{ degree }}"{% endif %} />
+                <select id="degree" name="degree">
+                    <option value="1" {% if default_selected['degree'] == '1' %}selected{% endif %}>1 Undergraduate Certificate or Diploma</option>
+                    <option value="2" {% if default_selected['degree'] == '2' %}selected{% endif %}>2 Associate's Degree</option>
+                    <option value="3" {% if default_selected['degree'] == '3' %}selected{% endif %}>3 Bachelor’s Degree</option>
+                    <option value="4" {% if default_selected['degree'] == '4' %}selected{% endif %}>4 Post-baccalaureate Certificate</option>
+                    <option value="5" {% if default_selected['degree'] == '5' %}selected{% endif %}>5 Master's Degree</option>
+                    <option value="6" {% if default_selected['degree'] == '6' %}selected{% endif %}>6 Doctoral Degree</option>
+                    <option value="7" {% if default_selected['degree'] == '7' %}selected{% endif %}>7 First Professional Degree</option>
+                    <option value="8" {% if default_selected['degree'] == '8' %}selected{% endif %}>8 Graduate/Professional Certificate</option>
+                </select>
             </div>
             <div>
                 <label for="name">Degree Preference:</label>
@@ -152,6 +189,22 @@
                 <button type="submit">Update</button>
             </div>
     </form>
+        <div id="right_container" style="display: flex;">
+            <div id="map" style="width: 100%; height:70%"></div>
+            <div id="left-panel" class="recommended-schools" style="width: 95%; height: calc(35% - 20px); margin-top: 20px;">
+                <h2>Recommended Schools</h2>
+                <ol id="school-list"></ol>
+                <div id="school-list-nav">
+                    <button id="school-list-prev">Previous</button>
+                    <button id="school-list-next">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 
 <script>
 
@@ -169,13 +222,6 @@
 
     var colorScheme = d3.schemeBlues[9];
 
-    {#var svg=d3#}
-    {#    .select("body")#}
-    {#    .append("svg")#}
-    {#    .attr("width", width + margin.right + margin.left)#}
-    {#    .attr("height",height + margin.top + margin.right)#}
-    {#    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");#}
-
     var svg = d3.select("#map")
     .append("svg")
     .attr("width", "100%")
@@ -188,11 +234,6 @@
         .scale(1000)
         .translate([ width / 2, height / 2]);
 
-    {#var projection = d3.geoMercator()#}
-    {#.center([-98, 40])#}
-    {#.scale(750)#}
-    {#.translate([width / 2 , height / 2]);#}
-
     var path = d3.geoPath().projection(projection);
 
     // Create a tip object
@@ -203,11 +244,11 @@
             return "<strong>Name:</strong> " + d.school_name + "<br>" +
                    "<strong>City:</strong> " + d.city + "<br>" +
                    "<strong>State:</strong> " + d.state;
+            //
         });
 
     // Attach the tip to your SVG
     svg.call(tip);
-
 
 
     var promises = [
@@ -238,15 +279,11 @@
           .attr("stroke", "black")
           .attr("stroke-width", 1)
           .on("mouseover", function(d) {
-            tip.show(d);
+              tip.show(d);
            })
           .on("mouseout", function(d) {
             tip.hide(d);
            });
-
-
-
-
 
         // Sort the mock_data by rank_score in descending order
         mock_data.sort(function(a, b) {
@@ -338,19 +375,7 @@
 
     });
 
-
     function display(states_10m){
-
-        {#var tip = d3.tip()#}
-        {#    .attr("class", "d3-tip")#}
-        {#    .offset([-10, 0])#}
-        {#    .html(function(d) {#}
-        {#        return "<strong>" + d.school_name + "</strong><br>" + d.city + ", " + d.state;#}
-        {#    });#}
-        {##}
-        {#svg.call(tip);#}
-
-
 
         svg.append("g")
             .attr("class", "states")
@@ -364,8 +389,8 @@
             .attr("fill",colorScheme[0])
             .attr("stroke", "#000")
             .attr("d", path)
-            {#.on('mouseover', tip.show)#}
-            {#.on('mouseout', tip.hide);#}
+        // set the fill color to green
+        d3.selectAll("path").style("fill", "#90EE90");
     }
 
 
