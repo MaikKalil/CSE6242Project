@@ -171,21 +171,6 @@
                 </select>
             </div>
             <div>
-                <label for="name">Degree Preference:</label>
-                <select id="degree_pref" name="degree_pref">
-                    <option value="1" {% if default_selected['degree_pref'] == '1' %}selected{% endif %}>1 Equally</option>
-                    <option value="2" {% if default_selected['degree_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
-                    <option value="3" {% if default_selected['degree_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
-                    <option value="4" {% if default_selected['degree_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
-                    <option value="5" {% if default_selected['degree_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
-                    <option value="6" {% if default_selected['degree_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
-                    <option value="7" {% if default_selected['degree_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
-                    <option value="8" {% if default_selected['degree_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
-                    <option value="9" {% if default_selected['degree_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
-                    <option value="10" {% if default_selected['degree_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
-                </select>
-            </div>
-            <div>
                 <label for="name">Field of Study:</label>
                 <select id="fields" name="fields">
                     {%  for field in fields %}
