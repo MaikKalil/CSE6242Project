@@ -11,6 +11,37 @@ from geopy.distance import great_circle
 import hashlib
 import os
 db_path = os.path.join(os.path.dirname(__file__), 'cs.db')  # get the absolute path of the database file
+import pickle
+
+class DatabaseHandler:
+    @staticmethod
+    def get_table(name):
+        if name == 'sizes':
+            tbl = ['', 'Small', 'Medium', 'Large']
+        elif name == 'types':
+            tbl = ['', 'Public', 'Private Nonprofit', 'Private For-Profit']
+        elif name == 'urban':
+            tbl = ['', 'City', 'Suburban', 'Town', 'Rural']
+        elif name == 'missions':
+            tbl = ['', 'Men-Only College', 'Women-Only College', 'Alaska Native Native Hawaiian Serving Institution', \
+                'Asian American Native American Pacific Islander-Serving Institution', \
+                'Hispanic-Serving Institution', 'Historically Black College and University', \
+                'Native American Non-Tribal Institution', 'Predominantly Black Institution',
+                'Tribal College and University']
+        elif name == 'states':
+            with sqlite3.connect(db_path) as conn:
+                tbl = list(pd.read_sql("SELECT DISTINCT STABBR FROM inst ORDER BY 1", conn).STABBR)
+                tbl.insert(0, '')
+        elif name == 'fields':
+            with sqlite3.connect(db_path) as conn:
+                tbl = list(pd.read_sql("SELECT DISTINCT CIPDESC FROM fields ORDER BY 1", conn).CIPDESC)
+                tbl.insert(0, '')
+        elif name == 'religs':
+            with sqlite3.connect(db_path) as conn:
+                tbl = list(pd.read_sql("SELECT DISTINCT NAME FROM relig ORDER BY 1", conn).NAME)
+                tbl.insert(0, '')
+        return tbl
+
 @app.route('/')
 def index():
    print('Request for index page received')
@@ -38,19 +69,13 @@ def login():
            cur = conn.cursor()
            if pd.read_sql(f"SELECT * FROM user WHERE user_id ={user_id}", conn).empty:
                cur.execute(f"INSERT INTO user values('{email}',{user_id})")
-           states = list(pd.read_sql("SELECT DISTINCT STABBR FROM inst ORDER BY 1", conn).STABBR)
-           states.insert(0, '')
-           fields = list(pd.read_sql("SELECT DISTINCT CIPDESC FROM fields ORDER BY 1", conn).CIPDESC)
-           fields.insert(0, '')
-           religs = list(pd.read_sql("SELECT DISTINCT NAME FROM relig ORDER BY 1", conn).NAME)
-           religs.insert(0, '')
-           sizes = ['','Small','Medium','Large']
-           types = ['', 'Public', 'Private Nonprofit', 'Private For-Profit']
-           urban = ['', 'City', 'Suburban', 'Town', 'Rural']
-           missions =['','Men-Only College','Women-Only College','Alaska Native Native Hawaiian Serving Institution',\
-               'Asian American Native American Pacific Islander-Serving Institution',\
-               'Hispanic-Serving Institution','Historically Black College and University',\
-               'Native American Non-Tribal Institution','Predominantly Black Institution','Tribal College and University']
+           states = DatabaseHandler.get_table('states')
+           fields = DatabaseHandler.get_table('fields')
+           religs = DatabaseHandler.get_table('religs')
+           sizes = DatabaseHandler.get_table('sizes')
+           types = DatabaseHandler.get_table('types')
+           urban = DatabaseHandler.get_table('urban')
+           missions = DatabaseHandler.get_table('missions')
 
        return render_template('landing.html', user =username, user_id=user_id, default_selected=default_selected,
                               states =states, fields =fields, sizes =sizes, types =types, urban=urban,
@@ -60,21 +85,16 @@ def login():
        return redirect(url_for('index'))
 
 @app.route('/landing/update', methods=['GET', 'POST'])
-#Helper function to calculate distance between universities and a given zip code.
-# def inst_dist (lat,lon, inst_tbl):
-#     idx = inst_tbl.apply(lambda x: great_circle((x["LATITUDE"], x["LONGITUDE"]), (lat, lon)).miles, axis=1)
-#     return inst_tbl.loc[:, ['UNITID']].assign(DISTANCE_MI=idx)
 def update():
-    #Re-establish variable lists that could not be added to session due to size (limit 4 kb)
-    with sqlite3.connect(db_path) as conn:
-        cur = conn.cursor()
-        states = list(pd.read_sql("SELECT DISTINCT STABBR FROM inst ORDER BY 1", conn).STABBR)
-        states.insert(0, '')
-        fields = list(pd.read_sql("SELECT DISTINCT CIPDESC FROM fields ORDER BY 1", conn).CIPDESC)
-        fields.insert(0, '')
-        religs = list(pd.read_sql("SELECT DISTINCT NAME FROM relig ORDER BY 1", conn).NAME)
-        religs.insert(0, '')
     user = session.get('user')
+    states = DatabaseHandler.get_table('states')
+    fields = DatabaseHandler.get_table('fields')
+    religs = DatabaseHandler.get_table('religs')
+    sizes = DatabaseHandler.get_table('sizes')
+    types = DatabaseHandler.get_table('types')
+    urban = DatabaseHandler.get_table('urban')
+    missions = DatabaseHandler.get_table('missions')
+
     sat_math = request.form.get('sat_math')
     sat_cr = request.form.get('sat_cr')
     act = request.form.get('act')
@@ -84,14 +104,6 @@ def update():
     salary = request.form.get('salary')
     ar = request.form.get('ar')
     gr = request.form.get('gr')
-    sizes = ['', 'Small', 'Medium', 'Large']
-    types = ['', 'Public', 'Private Nonprofit', 'Private For-Profit']
-    urban = ['', 'City', 'Suburban', 'Town', 'Rural']
-    missions = ['', 'Men-Only College', 'Women-Only College', 'Alaska Native Native Hawaiian Serving Institution', \
-               'Asian American Native American Pacific Islander-Serving Institution', \
-               'Hispanic-Serving Institution', 'Historically Black College and University', \
-               'Native American Non-Tribal Institution', 'Predominantly Black Institution',
-               'Tribal College and University']
 
     default_selected = {'states': request.form.getlist('states'),
                         'zip_pref': request.form.get('zip_pref'),
@@ -115,26 +127,35 @@ def update():
                         'relig_pref': request.form.get('relig_pref'),
                         'limit_match': request.form.get('limit_match')
                         }
+    #Create nested dictionary for ranking algo
+    data = {'user': user,
+            'limit_match': default_selected['limit_match'],
+            'degree': {'pref':10,'val': default_selected['degree'],'multi': 'N'},
+            'sat_math': {'pref':10,'val': sat_math,'multi': 'N'},
+            'sat_cr': {'pref': 10, 'val': sat_cr, 'multi': 'N'},
+            'act': {'pref': 10, 'val': act, 'multi': 'N'},
+            'states': {'pref': 10, 'val': default_selected['states'], 'multi': 'Y'},
+            'input_zip': {'pref': default_selected['zip_pref'], 'val': [input_zip, max_dist], 'multi': 'N'},
+            'field': {'pref': default_selected['field_pref'], 'val': default_selected['fields'], 'multi': 'N'},
+            'cost': {'pref': default_selected['cost_pref'], 'val': [max_cost, default_selected['hi']], 'multi': 'N'},
+            'salary': {'pref': default_selected['sal_pref'], 'val': salary, 'multi': 'N'},
+            'ar': {'pref': default_selected['ar_pref'], 'val': ar, 'multi': 'N'},
+            'gr': {'pref': default_selected['gr_pref'], 'val': gr, 'multi': 'N'},
+            'sizes': {'pref': default_selected['size_pref'], 'val': default_selected['sizes'], 'multi': 'Y'},
+            'types': {'pref': default_selected['type_pref'], 'val': default_selected['types'], 'multi': 'Y'},
+            'urban': {'pref': default_selected['urban_pref'], 'val': default_selected['urban'], 'multi': 'Y'},
+            'missions': {'pref': default_selected['mission_pref'], 'val': default_selected['missions'], 'multi': 'Y'},
+            'religs': {'pref': default_selected['relig_pref'], 'val': default_selected['religs'], 'multi': 'Y'}
+            }
 
-    print(default_selected['sizes'], input_zip, max_dist, max_cost, salary)
+    filename = os.path.join(os.path.dirname(db_path), "data.pickle")
+    with open(filename, "wb") as file:
+        pickle.dump(data, file)
+
     return render_template('landing.html', user =user, default_selected= default_selected,
                            states=states, fields = fields, zip =input_zip, zip_dist=max_dist, max_cost =max_cost,
                            sat_math =sat_math, sat_cr = sat_cr, act = act, salary = salary, ar= ar, gr =gr,
                            sizes = sizes, types=types, urban =urban, missions=missions, religs=religs)
-    # with sqlite3.connect(db_path) as conn:
-    #     geo = pd.read_sql("SELECT * FROM geo", conn)
-    #     inst = pd.read_sql("SELECT UNITID, LATITUDE, LONGITUDE FROM inst", conn)
-    #     lat = float(list(geo[geo['zip'] == input_zip]['lat'])[0])
-    #     lon = float(list(geo[geo['zip'] == input_zip]['lng'])[0])
-    #     print(f"lat, lon: ({lat}, {lon})")
-    #     zip_all_dist = inst_dist(lat, lon, inst)
-
-# def features_dict(feature1, feature2, feature3):
-#     featuresDict = {}
-#     featuresDict['feature1']= 'OMENRUP_PELL_NFT_POOLED_SUPP'
-#     featuresDict['feature2']= 'OMENRYP_PELL_FT_POOLED_SUPP'
-#     featuresDict['feature3']= 'OMENRAP_PELL_FT_POOLED_SUPP'
-#     return featuresDict
 
 
 if __name__ == '__main__':
