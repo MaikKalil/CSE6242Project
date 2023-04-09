@@ -21,8 +21,7 @@ def login():
    email = request.form.get('email')
    if email and '@' in email:
        default_selected = {'states': [''], 'zip_pref': '10',
-                           'degree':'3', 'degree_pref': '10',
-                           'fields': '', 'field_pref': '10',
+                           'degree':'3', 'fields': '', 'field_pref': '10',
                            'hi':'3', 'cost_pref': '10', 'sal_pref': '10',
                            'ar_pref':'10', 'gr_pref':'10',
                            'sizes': '', 'size_pref':'10',
@@ -97,7 +96,6 @@ def update():
     default_selected = {'states': request.form.getlist('states'),
                         'zip_pref': request.form.get('zip_pref'),
                         'degree': request.form.get('degree'),
-                        'degree_pref': request.form.get('degree_pref'),
                         'fields': request.form.get('fields'),
                         'field_pref': request.form.get('field_pref'),
                         'hi': request.form.get('hi'),
