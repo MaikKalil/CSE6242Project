@@ -136,7 +136,11 @@
             </div>
             <div>
                 <label for="name">Home Zip Code:</label>
-                <input type="text" id="zip" name="zip" {% if text_default %}value="{{ zip }}"{% endif %} maxlength="5" pattern="\d{5}" required/>
+                <input type="text" id="zip" name="zip" value="{{ zip or '' }}" maxlength="5" pattern="\d{5}" required/>
+            </div>
+            <div>
+                <label for="name">Max Distance:</label>
+                <input type="number" id="zip_dist" name="zip_dist" value="{{ zip_dist or 0 }}" min="0" step="5" required />
             </div>
             <div>
                 <label for="name">Distance Preference:</label>
@@ -152,10 +156,6 @@
                     <option value="9" {% if default_selected['zip_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
                     <option value="10" {% if default_selected['zip_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
                 </select>
-            </div>
-            <div>
-                <label for="name">Max Distance:</label>
-                <input type="number" id="zip_dist" name="zip_dist" {% if text_default %}value="{{ zip_dist }}"{% endif %} min="0" required />
             </div>
             <div>
                 <label for="name">Degree:</label>
@@ -186,6 +186,258 @@
                 </select>
             </div>
             <div>
+                <label for="name">Field of Study:</label>
+                <select id="fields" name="fields">
+                    {%  for field in fields %}
+                        <option value="{{ field }}" {% if field in default_selected['fields'] %}selected{% endif %}>{{ field }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="name">Field Preference:</label>
+                <select id="field_pref" name="field_pref">
+                    <option value="1" {% if default_selected['field_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['field_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['field_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['field_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['field_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['field_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['field_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['field_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['field_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['field_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Household Income:</label>
+                <select id="hi" name="hi">
+                    <option value="1" {% if default_selected['hi'] == '1' %}selected{% endif %}><= $30K</option>
+                    <option value="2" {% if default_selected['hi'] == '2' %}selected{% endif %}>>$30K <= $48k</option>
+                    <option value="3" {% if default_selected['hi'] == '3' %}selected{% endif %}>>$48K <= $75k</option>
+                    <option value="4" {% if default_selected['hi'] == '4' %}selected{% endif %}>>$75K <= $110k</option>
+                    <option value="5" {% if default_selected['hi'] == '5' %}selected{% endif %}>>$110K</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Max Average Annual Cost:</label>
+                <input type="number" id="max_cost" name="max_cost" value="{{ max_cost or 0 }}" min="0" step="1000" required />
+            </div>
+            <div>
+                <label for="name">Cost Preference:</label>
+                <select id="cost_pref" name="cost_pref">
+                    <option value="1" {% if default_selected['cost_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['cost_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['cost_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['cost_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['cost_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['cost_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['cost_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['cost_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['cost_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['cost_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Median Expected Salary:</label>
+                <input type="number" id="salary" name="salary" value="{{ salary or 0 }}" min="0" step="5000" required />
+            </div>
+            <div>
+                <label for="name">Salary Preference:</label>
+                <select id="sal_pref" name="sal_pref">
+                    <option value="1" {% if default_selected['sal_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['sal_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['sal_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['sal_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['sal_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['sal_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['sal_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['sal_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['sal_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['sal_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">SAT Math:</label>
+                <input type="range" id="sat_math" name="sat_math" min="0" max="800" value="{{ sat_math or 0 }}" />
+                <span id="sat_math_value">{{ sat_math or 0 }}</span>
+            </div>
+            <div>
+                <label for="name">SAT Critical Reading:</label>
+                <input type="range" id="sat_cr" name="sat_cr" min="0" max="800" value="{{ sat_cr or 0 }}" />
+                <span id="sat_cr_value">{{ sat_cr or 0 }}</span>
+            </div>
+            <div>
+                <label for="name">ACT Score:</label>
+                <input type="range" id="act" name="act" min="0" max="36" value="{{ act or 0 }}" />
+                <span id="act_value">{{ act or 0 }}</span>
+            </div>
+            <div>
+                <label for="name">Acceptance Rate%:</label>
+                <input type="range" id="ar" name="ar" min="0" max="100" value="{{ ar or 0 }}" />
+                <span id="ar_value">{{ ar or 0 }}</span>
+            </div>
+            <div>
+                <label for="name">Acceptance Preference:</label>
+                <select id="ar_pref" name="ar_pref">
+                    <option value="1" {% if default_selected['ar_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['ar_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['ar_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['ar_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['ar_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['ar_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['ar_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['ar_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['ar_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['ar_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Graduation Rate%:</label>
+                <input type="range" id="gr" name="gr" min="0" max="100" value="{{ gr or 0 }}" />
+                <span id="gr_value">{{ gr or 0 }}</span>
+            </div>
+            <div>
+                <label for="name">Graduation Preference:</label>
+                <select id="gr_pref" name="gr_pref">
+                    <option value="1" {% if default_selected['gr_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['gr_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['gr_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['gr_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['gr_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['gr_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['gr_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['gr_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['gr_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['gr_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Student Body Size:</label>
+                <select id="sizes" name="sizes" multiple>
+                    {%  for size in sizes %}
+                        <option value="{{ size }}" {% if size in default_selected['sizes'] %}selected{% endif %}>{{ size }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="name">Size Preference:</label>
+                <select id="size_pref" name="size_pref">
+                    <option value="1" {% if default_selected['size_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['size_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['size_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['size_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['size_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['size_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['size_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['size_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['size_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['size_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">School Type:</label>
+                <select id="types" name="types" multiple>
+                    {%  for type in types %}
+                        <option value="{{ type }}" {% if type in default_selected['types'] %}selected{% endif %}>{{ type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="name">Type Preference:</label>
+                <select id="type_pref" name="type_pref">
+                    <option value="1" {% if default_selected['type_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['type_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['type_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['type_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['type_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['type_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['type_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['type_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['type_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['type_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Urbanicity:</label>
+                <select id="urban" name="urban" multiple>
+                    {%  for type in urban %}
+                        <option value="{{ type }}" {% if type in default_selected['urban'] %}selected{% endif %}>{{ type }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="name">Urbanicity Preference:</label>
+                <select id="urban_pref" name="urban_pref">
+                    <option value="1" {% if default_selected['urban_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['urban_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['urban_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['urban_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['urban_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['urban_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['urban_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['urban_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['urban_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['urban_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Specialized Mission:</label>
+                <select id="missions" name="missions" multiple>
+                    {%  for mission in missions %}
+                        <option value="{{ mission }}" {% if mission in default_selected['missions'] %}selected{% endif %}>{{ mission }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="name">Mission Preference:</label>
+                <select id="mission_pref" name="mission_pref">
+                    <option value="1" {% if default_selected['mission_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['mission_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['mission_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['mission_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['mission_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['mission_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['mission_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['mission_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['mission_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['mission_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Religious Affiliation:</label>
+                <select id="religs" name="religs" multiple>
+                    {%  for relig in religs %}
+                        <option value="{{ relig }}" {% if relig in default_selected['religs'] %}selected{% endif %}>{{ relig }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="name">Religious Preference:</label>
+                <select id="relig_pref" name="relig_pref">
+                    <option value="1" {% if default_selected['relig_pref'] == '1' %}selected{% endif %}>1 Equally</option>
+                    <option value="2" {% if default_selected['relig_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="3" {% if default_selected['relig_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
+                    <option value="4" {% if default_selected['relig_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
+                    <option value="5" {% if default_selected['relig_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
+                    <option value="6" {% if default_selected['relig_pref'] == '6' %}selected{% endif %}>6 Between 5 & 7</option>
+                    <option value="7" {% if default_selected['relig_pref'] == '7' %}selected{% endif %}>7 Very Strongly</option>
+                    <option value="8" {% if default_selected['relig_pref'] == '8' %}selected{% endif %}>8 Between 7 & 9</option>
+                    <option value="9" {% if default_selected['relig_pref'] == '9' %}selected{% endif %}>9 Extremely</option>
+                    <option value="10" {% if default_selected['relig_pref'] == '10' %}selected{% endif %}>10 Definitely</option>
+                </select>
+            </div>
+            <div>
+                <label for="name">Limit Matches:</label>
+                <select id="limit_match" name="limit_match">
+                    <option value="1" {% if default_selected['limit_match'] == '1' %}selected{% endif %}>Top 5</option>
+                    <option value="2" {% if default_selected['limit_match'] == '2' %}selected{% endif %}>Top 10</option>
+                    <option value="3" {% if default_selected['limit_match'] == '3' %}selected{% endif %}>Top 15</option>
+                    <option value="4" {% if default_selected['limit_match'] == '4' %}selected{% endif %}>Top 20</option>
+                    <option value="5" {% if default_selected['limit_match'] == '5' %}selected{% endif %}>Top 25</option>
+                    <option value="6" {% if default_selected['limit_match'] == '6' %}selected{% endif %}>Top 30</option>
+                </select>
+            </div>
+            <div>
                 <button type="submit">Update</button>
             </div>
     </form>
@@ -207,6 +459,45 @@
 
 
 <script>
+    var sat_math_slider = document.getElementById("sat_math");
+    var sat_math_output = document.getElementById("sat_math_value");
+    sat_math_output.innerHTML = sat_math_slider.value;
+
+    sat_math_slider.oninput = function() {
+        sat_math_output.innerHTML = this.value;
+    }
+
+    var sat_cr_slider = document.getElementById("sat_cr");
+    var sat_cr_output = document.getElementById("sat_cr_value");
+    sat_cr_output.innerHTML = sat_cr_slider.value;
+
+    sat_cr_slider.oninput = function() {
+        sat_cr_output.innerHTML = this.value;
+    }
+
+    var act_slider = document.getElementById("act");
+    var act_output = document.getElementById("act_value");
+    act_output.innerHTML = act_slider.value;
+
+    act_slider.oninput = function() {
+        act_output.innerHTML = this.value;
+    }
+
+    var ar_slider = document.getElementById("ar");
+    var ar_output = document.getElementById("ar_value");
+    ar_output.innerHTML = ar_slider.value;
+
+    ar_slider.oninput = function() {
+        ar_output.innerHTML = this.value;
+    }
+
+    var gr_slider = document.getElementById("gr");
+    var gr_output = document.getElementById("gr_value");
+    gr_output.innerHTML = gr_slider.value;
+
+    gr_slider.oninput = function() {
+        gr_output.innerHTML = this.value;
+    }
 
     var margin = {
         left: 50,
