@@ -19,7 +19,7 @@ class DatabaseHandler:
         if name == 'sizes':
             tbl = ['', 'Small', 'Medium', 'Large']
         elif name == 'types':
-            tbl = ['', 'Public', 'Private Nonprofit', 'Private For-Profit']
+            tbl = ['Public', 'Private Nonprofit', 'Private For-Profit']
         elif name == 'urban':
             tbl = ['', 'City', 'Suburban', 'Town', 'Rural']
         elif name == 'missions':
@@ -54,9 +54,10 @@ def login():
        default_selected = {'states': [''], 'zip_pref': '10',
                            'degree':'3', 'fields': '', 'field_pref': '10',
                            'hi':'3', 'cost_pref': '10', 'sal_pref': '10',
+                           'sat_math_pref':'10', 'sat_cr_pref':'10', 'act_pref':'10',
                            'ar_pref':'10', 'gr_pref':'10',
                            'sizes': '', 'size_pref':'10',
-                           'types':'', 'type_pref':'10',
+                           'types':'Public', 'type_pref':'10',
                            'urban':'', 'urban_pref':'10',
                            'missions':[''], 'mission_pref':'10',
                            'religs':[''], 'relig_pref':'10', 'limit_match':'6'}
@@ -113,11 +114,14 @@ def update():
                         'hi': request.form.get('hi'),
                         'cost_pref': request.form.get('cost_pref'),
                         'sal_pref': request.form.get('sal_pref'),
+                        'sat_math_pref': request.form.get('sat_math_pref'),
+                        'sat_cr_pref': request.form.get('sat_cr_pref'),
+                        'act_pref': request.form.get('act_pref'),
                         'ar_pref': request.form.get('ar_pref'),
                         'gr_pref': request.form.get('gr_pref'),
                         'sizes': request.form.getlist('sizes'),
                         'size_pref': request.form.get('size_pref'),
-                        'types': request.form.getlist('types'),
+                        'types': request.form.getlist('types')[0],
                         'type_pref': request.form.get('type_pref'),
                         'urban': request.form.getlist('urban'),
                         'urban_pref': request.form.get('urban_pref'),
@@ -141,8 +145,8 @@ def update():
             'salary': {'pref': default_selected['sal_pref'], 'val': salary, 'multi': 'N'},
             'ar': {'pref': default_selected['ar_pref'], 'val': ar, 'multi': 'N'},
             'gr': {'pref': default_selected['gr_pref'], 'val': gr, 'multi': 'N'},
+            'types': {'pref': default_selected['type_pref'], 'val': default_selected['types'], 'multi': 'N'},
             'sizes': {'pref': default_selected['size_pref'], 'val': default_selected['sizes'], 'multi': 'Y'},
-            'types': {'pref': default_selected['type_pref'], 'val': default_selected['types'], 'multi': 'Y'},
             'urban': {'pref': default_selected['urban_pref'], 'val': default_selected['urban'], 'multi': 'Y'},
             'missions': {'pref': default_selected['mission_pref'], 'val': default_selected['missions'], 'multi': 'Y'},
             'religs': {'pref': default_selected['relig_pref'], 'val': default_selected['religs'], 'multi': 'Y'}
