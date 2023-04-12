@@ -80,6 +80,7 @@
 #map {
   width: 100%;
   height: calc(65% - 60px);
+  position: relative;
 }
 
 .sublist {
