@@ -491,7 +491,7 @@ def update():
     full_list, hard_list, soft_list = rankHandler.determine_constraint_type(data)
     base = rankHandler.apply_constraints(data, full_list)
     reduced = rankHandler.apply_hard(base, hard_list)
-    file = os.path.join(os.path.dirname(db_path), "ranked_results.csv")
+    file = os.path.join(os.path.dirname(db_path), "/static/landing/ranked_results.csv")
     rankHandler.output_csv(reduced, data, file)
 
     return render_template('landing.html', user =user, default_selected= default_selected,
