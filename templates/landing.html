@@ -587,6 +587,11 @@
 
         var mock_data = array[1];
 
+        // Define a color scale
+        var colorScale = d3.scaleLinear()
+         .domain(d3.extent(mock_data, function(d) { return d.rank_score; })) // assumes that the data has a 'value' column
+         .range(["#FFFFFF", "#0000FF"]); // range of colors for the gradient, from dark green to dark red
+
         // Add circles for each school to the map
         svg.selectAll("circle")
           .data(mock_data)
@@ -598,9 +603,9 @@
           .attr("cy", function(d) {
               return projection([d.longitude, d.latitude])[1];
           })
-          .attr("r", 6)
-          .attr("fill", "steelblue")
-          .attr("opacity", 0.9)
+          .attr("r", 8)
+          .attr("fill", function(d) { return colorScale(d.rank_score); })
+          .attr("opacity", 1)
           .attr("stroke", "black")
           .attr("stroke-width", 1)
           .on("mouseover", function(d) {
@@ -609,6 +614,74 @@
           .on("mouseout", function(d) {
             tip.hide(d);
            });
+
+        // Create a new container for the legend
+        var legendContainer = d3.select("#map").append("div")
+            .attr("id", "legend-container")
+            .style("position", "absolute")
+            .style("bottom", "105px")
+            .style("right", "10px")
+            .style("background-color", "white")
+            .attr("transform", "translate(" + (5) + "," + (5) + ")")
+            .style("height", "50px")
+            .style("width", "200px")
+
+
+
+        // Add the legend to the container
+        var legend = legendContainer.append("svg")
+            .attr("width", 220)
+            .attr("height", 50)
+            .attr("viewBox", "0 0 200 50")
+
+        // Add a title to the legend
+        legend.append("text")
+            .text("Match Strength")
+            .attr("x", 72)
+            .attr("y", 12)
+            .style("text-anchor", "middle")
+            .style("font-weight", "bold");
+
+        // Add a gradient to the legend
+        var gradient = legend.append("defs")
+            .append("linearGradient")
+            .attr("id", "gradient")
+            .attr("x1", "0%")
+            .attr("x2", "100%");
+
+        gradient.append("stop")
+            .attr("offset", "0%")
+            .attr("stop-color", "#FFFFFF");
+
+        gradient.append("stop")
+            .attr("offset", "100%")
+            .attr("stop-color", "#0000FF");
+
+        // Add a rectangle with the gradient fill to the legend
+        legend.append("rect")
+            .attr("x", 22)
+            .attr("y", 20)
+            .attr("width", 100)
+            .attr("height", 20)
+            .style("fill", "url(#gradient)")
+            .style("stroke", "none");
+
+        // Add labels to the legend
+        legend.append("text")
+            .text("Low")
+            .attr("x", 5)
+            .attr("y", 35)
+            //.style("font-weight", "bold")
+            .style("font-size", "16px")
+            .style("text-anchor","middle");
+
+        legend.append("text")
+            .text("High")
+            .attr("x", 140)
+            .attr("y", 35)
+            //.style("font-weight", "bold")
+            .style("font-size", "16px")
+            .style("text-anchor","middle");
 
         // Sort the mock_data by rank_score in descending order
         mock_data.sort(function(a, b) {
