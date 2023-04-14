@@ -566,11 +566,43 @@
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-            return "<strong>Name:</strong> " + d.school_name + "<br>" +
-                   "<strong>City:</strong> " + d.city + "<br>" +
-                   "<strong>State:</strong> " + d.state;
-            //
+            var html = "";
+            if (d['NAME']) {
+                html += "<span style='font-weight:bold; font-size:16px'>" + d['NAME'] + "</span>" + "<br>";
+            }
+            if (d.CITY && d.STATE) {
+                html += "Location: " + d.CITY + ", " + d.STATE +  "<br>";
+            }
+            if (d.SIZE) {
+                html += "Size: " + d.SIZE + "<br>";
+            }
+            if (d.LOCALE) {
+                html += "Urbanicity: " + d.LOCALE +"<br>";
+            }
+            if (d['SCHOOL TYPE']) {
+                html += "Type: " + d['SCHOOL TYPE'] +"<br>";
+            }
+            if (d["GRADUATION RATE"]) {
+                html += "Graduation Rate: " + d["GRADUATION RATE"] +"<br>";
+            }
+            if (d["AVG COST BASED ON HI"]) {
+                html += "Average Tuition: " + d["AVG COST BASED ON HI"] +"<br>";
+            }
+            if (d['10YR MEDIAN EARNINGS']) {
+                html += "Median Earnings: " + d['10YR MEDIAN EARNINGS'] + "<br>";
+            }
+            if (d["SAT MATH 25TH PCTL"] && d['SAT MATH 75TH PCTL']) {
+                html += "Mid 50% SAT MATH: " + d["SAT MATH 25TH PCTL"] + "-" + d['SAT MATH 75TH PCTL'] + "<br>";
+            }
+            if (d["SAT CR 25TH PCTL"] && d['SAT CR 75TH PCTL']) {
+                html += "Mid 50% SAT CR: " + d["SAT CR 25TH PCTL"] + "-" + d['SAT CR 75TH PCTL'] + "<br>";
+            }
+            if (d["ACT 25TH PCTL"] && d['ACT 75TH PCTL']) {
+                html += "Mid 50% ACT: " + d["ACT 25TH PCTL"] + "-" + d['ACT 75TH PCTL'] + "<br>";
+            }
+            return html;
         });
+
 
     // Attach the tip to your SVG
     svg.call(tip);
@@ -578,36 +610,36 @@
 
     var promises = [
         d3.json("/static/landing/states-10m.json"),
-        d3.csv("/static/landing/mock_rankings.csv")
+        d3.csv("/static/landing/ranked_results.csv")
     ]
 
     Promise.all(promises).then(function(array) {
         states_10m = array[0];
         display(states_10m);
 
-        var mock_data = array[1];
+        var ranking_data = array[1];
 
         // Define a color scale
         var colorScale = d3.scaleLinear()
-         .domain(d3.extent(mock_data, function(d) { return d.rank_score; })) // assumes that the data has a 'value' column
-         .range(["#FFFFFF", "#0000FF"]); // range of colors for the gradient, from dark green to dark red
+         .domain(d3.extent(ranking_data, function(d) { return d.RANKING })) // assumes that the data has a 'value' column
+         .range(['#460000', "#971919", "rgb(255, 255, 255)"]); // range of colors for the gradient, from dark green to dark red
 
         // Add circles for each school to the map
         svg.selectAll("circle")
-          .data(mock_data)
+          .data(ranking_data)
           .enter()
           .append("circle")
           .attr("cx", function(d) {
-              return projection([d.longitude, d.latitude])[0];
+              return projection([d.LONGITUDE, d.LATITUDE])[0];
           })
           .attr("cy", function(d) {
-              return projection([d.longitude, d.latitude])[1];
+              return projection([d.LONGITUDE, d.LATITUDE])[1];
           })
-          .attr("r", 8)
-          .attr("fill", function(d) { return colorScale(d.rank_score); })
+          .attr("r", 10)
+          .attr("fill", function(d) { return colorScale(d.RANKING); })
           .attr("opacity", 1)
           .attr("stroke", "black")
-          .attr("stroke-width", 1)
+          .attr("stroke-width", .9)
           .on("mouseover", function(d) {
               tip.show(d);
            })
@@ -683,9 +715,9 @@
             .style("font-size", "16px")
             .style("text-anchor","middle");
 
-        // Sort the mock_data by rank_score in descending order
-        mock_data.sort(function(a, b) {
-            return b.rank_score - a.rank_score;
+        // Sort the data by RANKING in descending order
+        ranking_data.sort(function(a, b) {
+            return b.RANKING - a.RANKING;
         });
 
         // Get a reference to the school-list <ol> element
@@ -693,14 +725,14 @@
 
         // Add the school names to the list
         var schools = schoolList.selectAll("li")
-            .data(mock_data)
+            .data(ranking_data)
             .enter()
             .append("li");
 
         schools.append("div")
             .classed("school-name", true)
             .html(function(d, i) {
-                return "<span class='rank' style='font-weight: bold; font-size: inherit;'>" + (i + 1) + ".</span> " + d.school_name;
+                return "<span class='rank' style='font-weight: bold; font-size: inherit;'>" + (i + 1) + ".</span> " + d.NAME;
             });
 
 
@@ -711,9 +743,9 @@
             .selectAll("li")
             .data(function(d) {
                 return [
-                    {label: "Average Tuition:", value: "$" + d.avg_tuition},
-                    {label: "Acceptance Rate:", value: d.acceptance_rate + "%"},
-                    {label: "Distance:", value: d.distance + " miles"}
+                    {label: "Average Tuition:", value: "$" + d["AVG COST BASED ON HI"]},
+                    {label: "Acceptance Rate:", value: d["ADMISSION RATE"] + "%"},
+                    {label: "Distance:", value: d.DISTANCE + " miles"}
                 ];
             })
             .enter()

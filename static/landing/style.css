@@ -1,11 +1,13 @@
 .d3-tip {
-    line-height: 1;
+    line-height: 1.2;
     padding: 12px;
     background: rgba(43, 43, 43, 0.8);
     color: #fff;
     border-radius: 2px;
-    font-size: 20px;
+    font-size: 16px;
+    font-family: "calibri";
 }
+
 
   /* Style northward tooltips specifically */
 .d3-tip.n:after {
