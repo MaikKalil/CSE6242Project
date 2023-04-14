@@ -253,7 +253,7 @@
                 <label for="name">SAT Math Preference:</label>
                 <select id="sat_math_pref" name="sat_math_pref">
                     <option value="1" {% if default_selected['sat_math_pref'] == '1' %}selected{% endif %}>1 Equally</option>
-                    <option value="2" {% if default_selected['sat_math_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="2> {% if default_selected['sat_math_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
                     <option value="3" {% if default_selected['sat_math_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
                     <option value="4" {% if default_selected['sat_math_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
                     <option value="5" {% if default_selected['sat_math_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
@@ -568,13 +568,16 @@
         .html(function(d) {
             var html = "";
             if (d['NAME']) {
-                html += "<span style='font-weight:bold; font-size:16px'>" + d['NAME'] + "</span>" + "<br>";
+                html += "<span style='font-weight:bold; font-size:16px'>" + d['RANKING'] + ". " + d['NAME'] + "</span>" + "<br>";
             }
             if (d.CITY && d.STATE) {
                 html += "Location: " + d.CITY + ", " + d.STATE +  "<br>";
             }
+            if (d["DISTANCE IN MILES"]) {
+                html += "Distance: " + parseInt(d["DISTANCE IN MILES"]) + " miles" + "<br>";
+            }
             if (d.SIZE) {
-                html += "Size: " + d.SIZE + "<br>";
+                html += "Size: " + parseInt(d.SIZE) + "<br>";
             }
             if (d.LOCALE) {
                 html += "Urbanicity: " + d.LOCALE +"<br>";
@@ -583,22 +586,22 @@
                 html += "Type: " + d['SCHOOL TYPE'] +"<br>";
             }
             if (d["GRADUATION RATE"]) {
-                html += "Graduation Rate: " + d["GRADUATION RATE"] +"<br>";
+                html += "Graduation Rate: " + parseInt(d["GRADUATION RATE"]) + "%" +"<br>";
             }
             if (d["AVG COST BASED ON HI"]) {
-                html += "Average Tuition: " + d["AVG COST BASED ON HI"] +"<br>";
+                html += "Average Tuition: " + "$" + parseInt(d["AVG COST BASED ON HI"]) +"<br>";
             }
             if (d['10YR MEDIAN EARNINGS']) {
-                html += "Median Earnings: " + d['10YR MEDIAN EARNINGS'] + "<br>";
+                html += "Median Earnings: " + "$" + parseInt(d['10YR MEDIAN EARNINGS']) + "<br>";
             }
             if (d["SAT MATH 25TH PCTL"] && d['SAT MATH 75TH PCTL']) {
-                html += "Mid 50% SAT MATH: " + d["SAT MATH 25TH PCTL"] + "-" + d['SAT MATH 75TH PCTL'] + "<br>";
+                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d['SAT MATH 75TH PCTL']) + "<br>";
             }
             if (d["SAT CR 25TH PCTL"] && d['SAT CR 75TH PCTL']) {
-                html += "Mid 50% SAT CR: " + d["SAT CR 25TH PCTL"] + "-" + d['SAT CR 75TH PCTL'] + "<br>";
+                html += "Mid 50% SAT CR: " + parseInt(d["SAT CR 25TH PCTL"]) + "-" + parseInt(d['SAT CR 75TH PCTL']) + "<br>";
             }
             if (d["ACT 25TH PCTL"] && d['ACT 75TH PCTL']) {
-                html += "Mid 50% ACT: " + d["ACT 25TH PCTL"] + "-" + d['ACT 75TH PCTL'] + "<br>";
+                html += "Mid 50% ACT: " + parseInt(d["ACT 25TH PCTL"]) + "-" + parseInt(d['ACT 75TH PCTL']) + "<br>";
             }
             return html;
         });
@@ -622,7 +625,7 @@
         // Define a color scale
         var colorScale = d3.scaleLinear()
          .domain(d3.extent(ranking_data, function(d) { return d.RANKING })) // assumes that the data has a 'value' column
-         .range(['#460000', "#971919", "rgb(255, 255, 255)"]); // range of colors for the gradient, from dark green to dark red
+         .range(['#89CFF0', "#0096FF", "#03002E"]); // range of colors for the gradient, from dark green to dark red
 
         // Add circles for each school to the map
         svg.selectAll("circle")
@@ -685,6 +688,7 @@
             .attr("offset", "0%")
             .attr("stop-color", "#FFFFFF");
 
+
         gradient.append("stop")
             .attr("offset", "100%")
             .attr("stop-color", "#0000FF");
@@ -743,9 +747,9 @@
             .selectAll("li")
             .data(function(d) {
                 return [
-                    {label: "Average Tuition:", value: "$" + d["AVG COST BASED ON HI"]},
-                    {label: "Acceptance Rate:", value: d["ADMISSION RATE"] + "%"},
-                    {label: "Distance:", value: d.DISTANCE + " miles"}
+                    {label: "Average Tuition:", value: "$" + parseInt(d["AVG COST BASED ON HI"])},
+                    {label: "Acceptance Rate:", value: parseInt(d["ADMISSION RATE"]) + "%"},
+                    {label: "Distance:", value: parseInt(d["DISTANCE IN MILES"]) + " miles"}
                 ];
             })
             .enter()
