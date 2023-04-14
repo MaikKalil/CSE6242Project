@@ -349,6 +349,39 @@ class rankHandler:
         return filtered
 
     @staticmethod
+    def norm_vals(data_dict, df):
+        max_dist = df['DISTANCE_MI'].max()
+        max_cost = df['NPT'].max()
+        sat_math = int(data_dict['sat_math']['val'])
+        sat_cr = int(data_dict['sat_cr']['val'])
+        act = int(data_dict['act']['val'])
+        df["zip_norm"] = (max_dist - df['DISTANCE_MI']) / max_dist
+        df["cost_norm"] = (max_cost - df['NPT']) / max_cost
+        df["math_norm"] = df.apply(lambda row: (sat_math - row['SATMT25']) / row['SATMT25'] if row['SATMT25'] > sat_math
+                                                                else (sat_math - row['SATMT25']) / sat_math, axis=1)
+        df["cr_norm"] = df.apply(lambda row: (sat_cr - row['SATVR25']) / row['SATVR25'] if row['SATVR25'] > sat_cr
+                                                                else (sat_cr - row['SATVR25']) / sat_cr, axis=1)
+        df["act_norm"] = df.apply(lambda row: (act - row['ACTCM25']) / row['ACTCM25'] if row['ACTCM25'] > act
+                                                                else (act - row['ACTCM25']) / act, axis=1)
+        return df
+
+    @staticmethod
+    def apply_soft(soft_list, norm_df, norm_dict):
+        prefs = np.array([])
+        soft_df = norm_df[['UNITID']]
+        for constraint in soft_list:
+            soft_df[constraint] = norm_df[norm_dict[constraint]['col']]
+            prefs = np.append(prefs, norm_dict[constraint]['pref'])
+        sum_prefs = np.sum(prefs)
+        pref_weights = prefs / sum_prefs
+
+        # Replace null values with zeros in soft_df[soft_list]
+        soft_df[soft_list] = soft_df[soft_list].fillna(0)
+
+        soft_df['Rating'] = soft_df[soft_list].values.dot(pref_weights)
+        return soft_df['Rating'].values
+
+    @staticmethod
     def output_csv(df, data_dict, filename):
         if data_dict['limit_match'] == '1':
             limit_match = 5
@@ -362,7 +395,7 @@ class rankHandler:
             limit_match = 25
         else:
             limit_match = 30
-        query = f"""SELECT RANK() OVER (ORDER BY UNITID) as RANKING, INSTNM as [NAME], [ZIP], 
+        query = f"""SELECT RANK() OVER (ORDER BY RATING DESC) as RANKING, INSTNM as [NAME], [ZIP], 
            CITY, STABBR as STATE, DISTANCE_MI as [DISTANCE IN MILES], LATITUDE, LONGITUDE,
            NPT as [AVG COST BASED ON HI], coalesce(NPT4_PUB, NPT4_PRIV) [OVERALL AVG COST], SATMT25 as [SAT MATH 25TH PCTL], 
            SATMT75 as [SAT MATH 75th PCTL], SATVR25 as [SAT CR 25TH PCTL], SATVR75 as [SAT CR 75TH PCTL], 
@@ -371,7 +404,7 @@ class rankHandler:
            case when degree = '1' then 'Y' else 'N' end [DEGREE OFFERED], case when missions = '1' then 'Y' else 'N' end [RELIGIOUS AFFILIATION], 
            case when salary_selected = 'salary3' then '3YR MEDIAN EARNINGS' else '10YR MEDIAN EARNINGS' end [SALARY REPORTED], salary_amt [SALARY]
            FROM df
-           ORDER BY UNITID
+           ORDER BY RATING DESC
            LIMIT {limit_match}"""
         sqldf(query).to_csv(filename, index=False)
 @app.route('/')
@@ -491,8 +524,29 @@ def update():
     full_list, hard_list, soft_list = rankHandler.determine_constraint_type(data)
     base = rankHandler.apply_constraints(data, full_list)
     reduced = rankHandler.apply_hard(base, hard_list)
+
+    normalized_df = rankHandler.norm_vals(data, reduced)
+    norm_dict = {
+        'sat_math': {'pref': int(data['sat_math']['pref']), 'col': 'math_norm'},
+        'sat_cr': {'pref': int(data['sat_cr']['pref']), 'col': 'cr_norm'},
+        'act': {'pref': int(data['act']['pref']), 'col': 'act_norm'},
+        'input_zip': {'pref': int(data['input_zip']['pref']), 'col': 'zip_norm'},
+        'field': {'pref': int(data['field']['pref']), 'col': 'field'},
+        'cost': {'pref': int(data['cost']['pref']), 'col': 'cost_norm'},
+        'salary': {'pref': int(data['salary']['pref']), 'col': 'salary'},
+        'ar': {'pref': int(data['ar']['pref']), 'col': 'ar'},
+        'gr': {'pref': int(data['gr']['pref']), 'col': 'gr'},
+        'types': {'pref': int(data['types']['pref']), 'col': 'types'},
+        'sizes': {'pref': int(data['sizes']['pref']), 'col': 'sizes'},
+        'urban': {'pref': int(data['urban']['pref']), 'col': 'urban'},
+        'missions': {'pref': int(data['missions']['pref']), 'col': 'missions'},
+        'religs': {'pref': int(data['religs']['pref']), 'col': 'religs'}
+    }
+
+    normalized_df['RATING'] = rankHandler.apply_soft(soft_list, normalized_df, norm_dict)
+
     file = os.path.join(os.path.dirname(db_path),'static','landing','ranked_results.csv')
-    rankHandler.output_csv(reduced, data, file)
+    rankHandler.output_csv(normalized_df, data, file)
 
     return render_template('landing.html', user =user, default_selected= default_selected,
                            states=states, fields = fields, zip =input_zip, zip_dist=max_dist, max_cost =max_cost,
