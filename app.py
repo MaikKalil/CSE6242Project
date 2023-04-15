@@ -209,11 +209,20 @@ class rankHandler:
                 offered = degree_tbl[degree_tbl['CREDLEV'] == data_dict[constraint]['val']]
                 filtered['degree'] = filtered['UNITID'].isin(offered['UNITID']).astype(int)
             elif constraint == 'sat_math':
-                filtered['sat_math'] = (filtered['SATMT25'] <= int(data_dict[constraint]['val'])).astype(int)
+                if int(data_dict[constraint]['val']) != 200:
+                    filtered['sat_math'] = (filtered['SATMT25'] <= int(data_dict[constraint]['val'])).astype(int)
+                else:
+                    filtered['sat_math'] = 1
             elif constraint == 'sat_cr':
-                filtered['sat_cr'] = (filtered['SATVR25'] <= int(data_dict[constraint]['val'])).astype(int)
+                if int(data_dict[constraint]['val']) != 200:
+                    filtered['sat_cr'] = (filtered['SATVR25'] <= int(data_dict[constraint]['val'])).astype(int)
+                else:
+                    filtered['sat_cr'] = 1
             elif constraint == 'act':
-                filtered['act'] = (filtered['ACTCM25'] <= int(data_dict[constraint]['val'])).astype(int)
+                if int(data_dict[constraint]['val']) != 10:
+                    filtered['act'] = (filtered['ACTCM25'] <= int(data_dict[constraint]['val'])).astype(int)
+                else:
+                    filtered['act'] = 1
             elif constraint == 'salary':
                 if int(data_dict[constraint]['val']) != 0:
                     # 3yr Median earnings is dependent on degree and major
@@ -237,16 +246,16 @@ class rankHandler:
                     filtered['salary10'] = 1
             elif constraint == 'ar':
                 if int(data_dict[constraint]['val']) != 0:
-                    filtered['ar'] = (filtered['ADM_RATE'] >= int(data_dict[constraint]['val'])).astype(int)
+                    filtered['ar'] = (filtered['ADM_RATE'] >= int(data_dict[constraint]['val'])/100.0).astype(int)
                 else:
                     filtered['ar'] = 1
             elif constraint == 'gr':
                 if int(data_dict[constraint]['val']) != 0:
                     if int(data_dict['degree']['val']) >= 3:
-                        filtered['gr'] = (filtered['C150_4'] >= int(data_dict[constraint]['val'])).astype(int)
+                        filtered['gr'] = (filtered['C150_4'] >= int(data_dict[constraint]['val'])/100.0).astype(int)
                         filtered = filtered.rename(columns={'C150_4': 'GRAD_RATE'})
                     else:
-                        filtered['gr'] = (filtered['C150_L4'] >= int(data_dict[constraint]['val'])).astype(int)
+                        filtered['gr'] = (filtered['C150_L4'] >= int(data_dict[constraint]['val'])/100.0).astype(int)
                         filtered = filtered.rename(columns={'C150_L4': 'GRAD_RATE'})
                 else:
                     filtered['gr'] = 1
@@ -258,7 +267,10 @@ class rankHandler:
                 else:
                     filtered['sizes'] = 1
             elif constraint == 'types':
-                filtered['types'] = (filtered['CONTROL'] == data_dict[constraint]['val']).astype(int)
+                if data_dict[constraint]['val'] != ['']:
+                    filtered['types'] = (filtered['CONTROL'] == data_dict[constraint]['val']).astype(int)
+                else:
+                    filtered['types'] = 1
             elif constraint == 'urban':
                 if data_dict[constraint]['val'] != ['']:
                     filtered['urban'] = (filtered['LOCALE'].isin(data_dict[constraint]['val'])).astype(int)
@@ -389,7 +401,7 @@ class rankHandler:
             limit_match = 25
         else:
             limit_match = 30
-        query = f"""SELECT RANK() OVER (ORDER BY RATING, INSTNM DESC) as RANKING, INSTNM as [NAME], [ZIP], 
+        query = f"""SELECT RANK() OVER (ORDER BY RATING DESC) as RANKING, INSTNM as [NAME], [ZIP], 
            CITY, STABBR as STATE, DISTANCE_MI as [DISTANCE IN MILES], LATITUDE, LONGITUDE,
            NPT as [AVG COST BASED ON HI], coalesce(NPT4_PUB, NPT4_PRIV) [OVERALL AVG COST], SATMT25 as [SAT MATH 25TH PCTL], 
            SATMT75 as [SAT MATH 75th PCTL], SATVR25 as [SAT CR 25TH PCTL], SATVR75 as [SAT CR 75TH PCTL], 
@@ -398,7 +410,7 @@ class rankHandler:
            case when degree = '1' then 'Y' else 'N' end [DEGREE OFFERED], case when missions = '1' then 'Y' else 'N' end [RELIGIOUS AFFILIATION], 
            case when salary_selected = 'salary3' then '3YR MEDIAN EARNINGS' else '10YR MEDIAN EARNINGS' end [SALARY REPORTED], salary_amt [SALARY]
            FROM df
-           ORDER BY RATING, INSTNM DESC
+           ORDER BY RATING DESC
            LIMIT {limit_match}"""
         sqldf(query).to_csv(filename, index=False)
 @app.route('/')
@@ -416,7 +428,7 @@ def login():
                            'sat_math_pref':'10', 'sat_cr_pref':'10', 'act_pref':'10',
                            'ar_pref':'10', 'gr_pref':'10',
                            'sizes': '', 'size_pref':'10',
-                           'types':'Public', 'type_pref':'10',
+                           'types':'', 'type_pref':'10',
                            'urban':'', 'urban_pref':'10',
                            'missions':[''], 'mission_pref':'10',
                            'religs':[''], 'relig_pref':'10', 'limit_match':'6'}
@@ -528,8 +540,8 @@ def update():
         'field': {'pref': int(data['field']['pref']), 'col': 'field'},
         'cost': {'pref': int(data['cost']['pref']), 'col': 'cost_norm'},
         'salary': {'pref': int(data['salary']['pref']), 'col': 'salary'},
-        'ar': {'pref': int(data['ar']['pref']), 'col': 'ar'},
-        'gr': {'pref': int(data['gr']['pref']), 'col': 'gr'},
+        'ar': {'pref': int(data['ar']['pref'])/100.0, 'col': 'ar'},
+        'gr': {'pref': int(data['gr']['pref'])/100.0, 'col': 'gr'},
         'types': {'pref': int(data['types']['pref']), 'col': 'types'},
         'sizes': {'pref': int(data['sizes']['pref']), 'col': 'sizes'},
         'urban': {'pref': int(data['urban']['pref']), 'col': 'urban'},
