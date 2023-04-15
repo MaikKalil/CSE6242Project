@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
+    <!--<script src="https://d3js.org/d3.v5.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
     <title>College Selection Made Easy</title>
     <style>
 		body {
@@ -479,10 +484,7 @@
             <div id="map" style="width: 100%; height:70%"></div>
             <div id="left-panel" class="recommended-schools" style="width: 95%; height: calc(35% - 20px); margin-top: 20px;">
                 <h2>Recommended Schools</h2>
-                <ol id="school-list"></ol>
-                <div id="school-list-nav">
-                    <button id="school-list-prev">Previous</button>
-                    <button id="school-list-next">Next</button>
+                <table id="RankTbl" class="display"  HEIGHT="100%"></table>
                 </div>
             </div>
         </div>
@@ -605,17 +607,61 @@
     // Attach the tip to your SVG
     svg.call(tip);
 
-
+/* Original promise code
     var promises = [
         d3.json("/static/landing/states-10m.json"),
         d3.csv("/static/landing/ranked_results.csv")
     ]
 
-    Promise.all(promises).then(function(array) {
+ */
+    // Zubaid's Code
+    // Function to convert d3.csv array-of-dicts to list-of-array
+   /* function convertToList(filePath) {
+        // Initialize the list of arrays
+        let listOfArrays = [];
+        // Read the CSV file
+        d3.csv(filePath, (data) => {
+            // Convert the data into an array
+            let array = Object.values(data);
+            // Add the array to the list of arrays
+            listOfArrays.push(array);
+        });
+        // Return the list of arrays
+        return listOfArrays;
+    } */
+
+    // Zubaid's code - individual initialize promises distinctly
+    var promise1 = d3.json("/static/landing/states-10m.json");
+    var promise2 = d3.csv("/static/landing/ranked_results.csv");
+    //var promise3 = convertToList("ranked_results.csv");
+    //console.log(promise2);
+
+
+// Original code
+/*    Promise.all(promises).then(function(array) { */
+
+//Zubaid code - changing promise to take in array
+    Promise.all([promise1,promise2]).then(function(array) {
         var states_10m = array[0];
         display(states_10m);
 
         var ranking_data = array[1];
+        //console.log(ranking_data);
+
+        var listOfArrays = [];
+        var ranking_arr_dict = array[1];
+        console.log(ranking_arr_dict);
+        for (var i = 0; i < ranking_arr_dict.length; i++) {
+            //console.log(ranking_arr_dict[i]);
+            //console.log(data[i].Age);
+            let array = Object.values(ranking_arr_dict[i]);
+            //console.log(array);
+            // Add the array to the list of arrays
+            listOfArrays.push(array);
+        }
+        console.log(listOfArrays);
+        //convertToList("ranked_results.csv");
+        //console.log(ranking_data_tbl);
 
         // Sort the data by RANKING in descending order
         ranking_data.sort(function(a, b) {
@@ -805,6 +851,57 @@
         // Initialize the school list
         updateSchoolList();
 
+        $(document).ready(function () {
+            $('#RankTbl').DataTable({
+                data: listOfArrays,
+                scrollY: 200,
+                scrollX: true,
+                 columns: [
+                     { title: 'RANKING' },
+                     { title: 'NAME' },
+                     { title: 'ZIP' },
+                     { title: 'CITY' },
+                     { title: 'STATE' },
+                     { title: 'DISTANCE mi' },
+                     { title: 'LATITUDE' },
+                     { title: 'LONGITUDE' },
+                     { title: 'AVG COST BASED ON HI' },
+                     { title: 'OVERALL AVG COST' },
+                     { title: 'SAT MATH 25TH PCTL' },
+                     { title: 'SAT MATH 75th PCTL' },
+                     { title: 'SAT CR 25TH PCTL' },
+                     { title: 'SAT CR 75TH PCTL' },
+                     { title: 'ACT 25TH PCTL' },
+                     { title: 'ACT 75TH PCTL' },
+                     { title: 'ADMISSION RATE' },
+                     { title: 'GRADUATION RATE' },
+                     { title: 'ENROLLMENT SIZE' },
+                     { title: 'SCHOOL TYPE' },
+                     { title: 'LOCALE' },
+                     { title: 'RELIGION' },
+                     { title: 'FIELD OFFERED' },
+                     { title: 'DEGREE OFFERED' },
+                     { title: 'RELIGIOUS AFFILIATION' },
+                     { title: 'SALARY REPORTED' },
+                     { title: 'SALARY' },
+                 ],
+                 columnDefs: [
+                    {
+                        target: 5,
+                        visible: false,
+                    },
+                    {
+                        target: 6,
+                        visible: false,
+                    },
+                     {
+                        target: 7,
+                        visible: false,
+                    },
+                 ],
+            });
+        });
+
     });
 
     function display(states_10m){
@@ -824,6 +921,8 @@
         // set the fill color to green
         d3.selectAll("path").style("fill", "#90EE90");
     }
+
+   // ranking_data_tbl
 
 
 </script>
