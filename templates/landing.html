@@ -545,7 +545,23 @@
 
     var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
 
-    var colorScheme = ["#9e0142","#b11646","#c32b4a","#d5414b","#e65949","#f47b4d","#fcad64","#fcb56a","#fdbc6e","#fed485"];
+    var colorScheme = [
+"#FFED30", // Gold
+"#FFF157",
+"#FFF47E",
+"#FFF7A5",
+"#FFFACD",
+"#FFFFE0", // Light Yellow
+"#E8F8F5", // Very Pale Cyan
+"#D4E4F6", // Light Blue
+"#A9CCE3",
+"#7FABE8",
+"#5588DE", // Medium-ish Blue
+"#2E64FE", // Royal Blue
+"#0000FF", // Blue
+"#00008B", // Dark Blue
+"#000080" // Navy Blue
+];
 
     var svg = d3.select("#map")
     .append("svg")
@@ -573,8 +589,8 @@
             if (d.CITY && d.STATE) {
                 html += "Location: " + d.CITY + ", " + d.STATE +  "<br>";
             }
-            if (d.SIZE) {
-                html += "Size: " + parseInt(d.SIZE) + "<br>";
+            if (d["ENROLLMENT SIZE"]) {
+                html += "Enrollment: " + parseInt(d["ENROLLMENT SIZE"]).toLocaleString() + "<br>";
             }
             if (d.LOCALE) {
                 html += "Urbanicity: " + d.LOCALE +"<br>";
@@ -583,16 +599,16 @@
                 html += "Type: " + d['SCHOOL TYPE'] +"<br>";
             }
             if (d["GRADUATION RATE"]) {
-                html += "Graduation Rate: " + parseInt(d["GRADUATION RATE"]) + "%" +"<br>";
+                html += "Graduation Rate: " + parseInt(100 * d["GRADUATION RATE"]) + "%" +"<br>";
             }
             if (d["AVG COST BASED ON HI"]) {
-                html += "Average Tuition: " + "$" + parseInt(d["AVG COST BASED ON HI"]) +"<br>";
+                html += "Average Tuition: " + "$" + parseInt(d["AVG COST BASED ON HI"]).toLocaleString() +"<br>";
             }
-            if (d['10YR MEDIAN EARNINGS']) {
-                html += "Median Earnings: " + "$" + parseInt(d['10YR MEDIAN EARNINGS']) + "<br>";
+            if (d['SALARY']) {
+                html += "Average Salary: $"  + parseInt(d['SALARY']).toLocaleString() + "<br>";
             }
-            if (d["SAT MATH 25TH PCTL"] && d['SAT MATH 75TH PCTL']) {
-                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d['SAT MATH 75TH PCTL']) + "<br>";
+            if (d["SAT MATH 25TH PCTL"] && d["SAT MATH 75th PCTL"]) {
+                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d["SAT MATH 75th PCTL"]) + "<br>";
             }
             if (d["SAT CR 25TH PCTL"] && d['SAT CR 75TH PCTL']) {
                 html += "Mid 50% SAT CR: " + parseInt(d["SAT CR 25TH PCTL"]) + "-" + parseInt(d['SAT CR 75TH PCTL']) + "<br>";
@@ -665,14 +681,16 @@
 
         // Sort the data by RANKING in descending order
         ranking_data.sort(function(a, b) {
-          return parseInt(b["RANKING"]) - parseInt(a["RANKING"]);
+          return parseInt(a["RANKING"]) - parseInt(b["RANKING"]);
         });
 
         // Define a color scale
         var uniqueRankings = d3.set(ranking_data.map(function(d) { return parseInt(d["RANKING"]) })).values();
-        var colorScale = d3.scaleOrdinal()
-            .domain(d3.extent(ranking_data, function(d) { return parseInt(d['RANKING']); }))
-            .range(["#9e0142","#b11646","#c32b4a","#d5414b","#e65949","#f47b4d","#fcad64","#fcb56a","#fdbc6e","#fed485"]);
+        // Define a color scale
+        var colorScale = d3.scaleLinear()
+          .domain([1, 30])
+          .range(["#FFED30", "#000080"]);
+
 
 
         // Add circles for each school to the map
@@ -687,7 +705,8 @@
               return projection([d['LONGITUDE'], d['LATITUDE']])[1];
           })
           .attr("r", 10)
-          .attr("fill", function(d) { return colorScale(parseInt(d["RANKING"])); })
+          .attr("fill", function(d) {
+              return colorScale(parseInt(d["RANKING"])); })
           .attr("opacity", 1)
           .attr("stroke", "black")
           .attr("stroke-width", .9)
