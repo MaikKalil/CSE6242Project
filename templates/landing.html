@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
+    <!--<script src="https://d3js.org/d3.v5.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+
     <title>College Selection Made Easy</title>
     <style>
 		body {
@@ -246,14 +251,14 @@
             </div>
             <div>
                 <label for="name">SAT Math:</label>
-                <input type="range" id="sat_math" name="sat_math" min="200" max="800" value="{{ sat_math or 500 }}" />
+                <input type="range" id="sat_math" name="sat_math" min="200" max="800" value="{{ sat_math or 200 }}" />
                 <span id="sat_math_value">{{ sat_math or 500 }}</span>
             </div>
             <div>
                 <label for="name">SAT Math Preference:</label>
                 <select id="sat_math_pref" name="sat_math_pref">
                     <option value="1" {% if default_selected['sat_math_pref'] == '1' %}selected{% endif %}>1 Equally</option>
-                    <option value="2> {% if default_selected['sat_math_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
+                    <option value="2" {% if default_selected['sat_math_pref'] == '2' %}selected{% endif %}>2 Between 1 & 3</option>
                     <option value="3" {% if default_selected['sat_math_pref'] == '3' %}selected{% endif %}>3 Moderately</option>
                     <option value="4" {% if default_selected['sat_math_pref'] == '4' %}selected{% endif %}>4 Between 3 & 5</option>
                     <option value="5" {% if default_selected['sat_math_pref'] == '5' %}selected{% endif %}>5 Strongly</option>
@@ -266,7 +271,7 @@
             </div>
             <div>
                 <label for="name">SAT Critical Reading:</label>
-                <input type="range" id="sat_cr" name="sat_cr" min="200" max="800" value="{{ sat_cr or 500 }}" />
+                <input type="range" id="sat_cr" name="sat_cr" min="200" max="800" value="{{ sat_cr or 200 }}" />
                 <span id="sat_cr_value">{{ sat_cr or 500 }}</span>
             </div>
             <div>
@@ -286,7 +291,7 @@
             </div>
             <div>
                 <label for="name">ACT Score:</label>
-                <input type="range" id="act" name="act" min="10" max="36" value="{{ act or 20 }}" />
+                <input type="range" id="act" name="act" min="10" max="36" value="{{ act or 10 }}" />
                 <span id="act_value">{{ act or 20 }}</span>
             </div>
             <div>
@@ -479,16 +484,11 @@
             <div id="map" style="width: 100%; height:70%"></div>
             <div id="left-panel" class="recommended-schools" style="width: 95%; height: calc(35% - 20px); margin-top: 20px;">
                 <h2>Recommended Schools</h2>
-                <ol id="school-list"></ol>
-                <div id="school-list-nav">
-                    <button id="school-list-prev">Previous</button>
-                    <button id="school-list-next">Next</button>
+                <table id="RankTbl" class="display"  HEIGHT="100%"></table>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 
 
@@ -545,7 +545,23 @@
 
     var dropdown = d3.select("#Dropdown").attr("id", "Dropdown");
 
-    var colorScheme = d3.schemeBlues[9];
+    var colorScheme = [
+"#FFED30", // Gold
+"#FFF157",
+"#FFF47E",
+"#FFF7A5",
+"#FFFACD",
+"#FFFFE0", // Light Yellow
+"#E8F8F5", // Very Pale Cyan
+"#D4E4F6", // Light Blue
+"#A9CCE3",
+"#7FABE8",
+"#5588DE", // Medium-ish Blue
+"#2E64FE", // Royal Blue
+"#0000FF", // Blue
+"#00008B", // Dark Blue
+"#000080" // Navy Blue
+];
 
     var svg = d3.select("#map")
     .append("svg")
@@ -573,11 +589,8 @@
             if (d.CITY && d.STATE) {
                 html += "Location: " + d.CITY + ", " + d.STATE +  "<br>";
             }
-            if (d["DISTANCE IN MILES"]) {
-                html += "Distance: " + parseInt(d["DISTANCE IN MILES"]) + " miles" + "<br>";
-            }
-            if (d.SIZE) {
-                html += "Size: " + parseInt(d.SIZE) + "<br>";
+            if (d["ENROLLMENT SIZE"]) {
+                html += "Enrollment: " + parseInt(d["ENROLLMENT SIZE"]).toLocaleString() + "<br>";
             }
             if (d.LOCALE) {
                 html += "Urbanicity: " + d.LOCALE +"<br>";
@@ -586,16 +599,16 @@
                 html += "Type: " + d['SCHOOL TYPE'] +"<br>";
             }
             if (d["GRADUATION RATE"]) {
-                html += "Graduation Rate: " + parseInt(d["GRADUATION RATE"]) + "%" +"<br>";
+                html += "Graduation Rate: " + parseInt(100 * d["GRADUATION RATE"]) + "%" +"<br>";
             }
             if (d["AVG COST BASED ON HI"]) {
-                html += "Average Tuition: " + "$" + parseInt(d["AVG COST BASED ON HI"]) +"<br>";
+                html += "Average Tuition: " + "$" + parseInt(d["AVG COST BASED ON HI"]).toLocaleString() +"<br>";
             }
-            if (d['10YR MEDIAN EARNINGS']) {
-                html += "Median Earnings: " + "$" + parseInt(d['10YR MEDIAN EARNINGS']) + "<br>";
+            if (d['SALARY']) {
+                html += "Average Salary: $"  + parseInt(d['SALARY']).toLocaleString() + "<br>";
             }
-            if (d["SAT MATH 25TH PCTL"] && d['SAT MATH 75TH PCTL']) {
-                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d['SAT MATH 75TH PCTL']) + "<br>";
+            if (d["SAT MATH 25TH PCTL"] && d["SAT MATH 75th PCTL"]) {
+                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d["SAT MATH 75th PCTL"]) + "<br>";
             }
             if (d["SAT CR 25TH PCTL"] && d['SAT CR 75TH PCTL']) {
                 html += "Mid 50% SAT CR: " + parseInt(d["SAT CR 25TH PCTL"]) + "-" + parseInt(d['SAT CR 75TH PCTL']) + "<br>";
@@ -610,22 +623,75 @@
     // Attach the tip to your SVG
     svg.call(tip);
 
-
+/* Original promise code
     var promises = [
         d3.json("/static/landing/states-10m.json"),
         d3.csv("/static/landing/ranked_results.csv")
     ]
 
-    Promise.all(promises).then(function(array) {
-        states_10m = array[0];
+ */
+    // Zubaid's Code
+    // Function to convert d3.csv array-of-dicts to list-of-array
+   /* function convertToList(filePath) {
+        // Initialize the list of arrays
+        let listOfArrays = [];
+        // Read the CSV file
+        d3.csv(filePath, (data) => {
+            // Convert the data into an array
+            let array = Object.values(data);
+            // Add the array to the list of arrays
+            listOfArrays.push(array);
+        });
+        // Return the list of arrays
+        return listOfArrays;
+    } */
+
+    // Zubaid's code - individual initialize promises distinctly
+    var promise1 = d3.json("/static/landing/states-10m.json");
+    var promise2 = d3.csv("/static/landing/ranked_results.csv");
+    //var promise3 = convertToList("ranked_results.csv");
+    //console.log(promise2);
+
+
+// Original code
+/*    Promise.all(promises).then(function(array) { */
+
+//Zubaid code - changing promise to take in array
+    Promise.all([promise1,promise2]).then(function(array) {
+        var states_10m = array[0];
         display(states_10m);
 
         var ranking_data = array[1];
+        //console.log(ranking_data);
+
+        var listOfArrays = [];
+        var ranking_arr_dict = array[1];
+        console.log(ranking_arr_dict);
+        for (var i = 0; i < ranking_arr_dict.length; i++) {
+            //console.log(ranking_arr_dict[i]);
+            //console.log(data[i].Age);
+            let array = Object.values(ranking_arr_dict[i]);
+            //console.log(array);
+            // Add the array to the list of arrays
+            listOfArrays.push(array);
+        }
+        console.log(listOfArrays);
+        //convertToList("ranked_results.csv");
+        //console.log(ranking_data_tbl);
+
+        // Sort the data by RANKING in descending order
+        ranking_data.sort(function(a, b) {
+          return parseInt(a["RANKING"]) - parseInt(b["RANKING"]);
+        });
 
         // Define a color scale
+        var uniqueRankings = d3.set(ranking_data.map(function(d) { return parseInt(d["RANKING"]) })).values();
+        // Define a color scale
         var colorScale = d3.scaleLinear()
-         .domain(d3.extent(ranking_data, function(d) { return d.RANKING })) // assumes that the data has a 'value' column
-         .range(['#89CFF0', "#0096FF", "#03002E"]); // range of colors for the gradient, from dark green to dark red
+          .domain([1, 30])
+          .range(["#FFED30", "#000080"]);
+
+
 
         // Add circles for each school to the map
         svg.selectAll("circle")
@@ -633,13 +699,14 @@
           .enter()
           .append("circle")
           .attr("cx", function(d) {
-              return projection([d.LONGITUDE, d.LATITUDE])[0];
+              return projection([d['LONGITUDE'], d['LATITUDE']])[0];
           })
           .attr("cy", function(d) {
-              return projection([d.LONGITUDE, d.LATITUDE])[1];
+              return projection([d['LONGITUDE'], d['LATITUDE']])[1];
           })
           .attr("r", 10)
-          .attr("fill", function(d) { return colorScale(d.RANKING); })
+          .attr("fill", function(d) {
+              return colorScale(parseInt(d["RANKING"])); })
           .attr("opacity", 1)
           .attr("stroke", "black")
           .attr("stroke-width", .9)
@@ -659,7 +726,7 @@
             .style("background-color", "white")
             .attr("transform", "translate(" + (5) + "," + (5) + ")")
             .style("height", "50px")
-            .style("width", "200px")
+            .style("width", "200px");
 
 
 
@@ -677,21 +744,22 @@
             .style("text-anchor", "middle")
             .style("font-weight", "bold");
 
+        // Define the color scale range
+        // var colorRange = ["#9e0142","#b11646","#c32b4a","#d5414b","#e65949","#f47b4d","#fcad64","#fcb56a","#fdbc6e","#fed485"]
+
         // Add a gradient to the legend
         var gradient = legend.append("defs")
             .append("linearGradient")
             .attr("id", "gradient")
-            .attr("x1", "0%")
-            .attr("x2", "100%");
+            .attr("x1", "100%")
+            .attr("x2", "0%");
 
-        gradient.append("stop")
-            .attr("offset", "0%")
-            .attr("stop-color", "#FFFFFF");
-
-
-        gradient.append("stop")
-            .attr("offset", "100%")
-            .attr("stop-color", "#0000FF");
+        // Add stops to the gradient using the colorScale variable
+        colorScale.range().forEach(function(color, i) {
+            gradient.append("stop")
+                .attr("offset", i * (100 / (colorScale.range().length - 1)) + "%")
+                .attr("stop-color", color);
+        });
 
         // Add a rectangle with the gradient fill to the legend
         legend.append("rect")
@@ -718,11 +786,6 @@
             //.style("font-weight", "bold")
             .style("font-size", "16px")
             .style("text-anchor","middle");
-
-        // Sort the data by RANKING in descending order
-        ranking_data.sort(function(a, b) {
-            return b.RANKING - a.RANKING;
-        });
 
         // Get a reference to the school-list <ol> element
         var schoolList = d3.select("#school-list");
@@ -807,6 +870,57 @@
         // Initialize the school list
         updateSchoolList();
 
+        $(document).ready(function () {
+            $('#RankTbl').DataTable({
+                data: listOfArrays,
+                scrollY: 200,
+                scrollX: true,
+                 columns: [
+                     { title: 'RANKING' },
+                     { title: 'NAME' },
+                     { title: 'ZIP' },
+                     { title: 'CITY' },
+                     { title: 'STATE' },
+                     { title: 'DISTANCE mi' },
+                     { title: 'LATITUDE' },
+                     { title: 'LONGITUDE' },
+                     { title: 'AVG COST BASED ON HI' },
+                     { title: 'OVERALL AVG COST' },
+                     { title: 'SAT MATH 25TH PCTL' },
+                     { title: 'SAT MATH 75th PCTL' },
+                     { title: 'SAT CR 25TH PCTL' },
+                     { title: 'SAT CR 75TH PCTL' },
+                     { title: 'ACT 25TH PCTL' },
+                     { title: 'ACT 75TH PCTL' },
+                     { title: 'ADMISSION RATE' },
+                     { title: 'GRADUATION RATE' },
+                     { title: 'ENROLLMENT SIZE' },
+                     { title: 'SCHOOL TYPE' },
+                     { title: 'LOCALE' },
+                     { title: 'RELIGION' },
+                     { title: 'FIELD OFFERED' },
+                     { title: 'DEGREE OFFERED' },
+                     { title: 'RELIGIOUS AFFILIATION' },
+                     { title: 'SALARY REPORTED' },
+                     { title: 'SALARY' },
+                 ],
+                 columnDefs: [
+                    {
+                        target: 5,
+                        visible: false,
+                    },
+                    {
+                        target: 6,
+                        visible: false,
+                    },
+                     {
+                        target: 7,
+                        visible: false,
+                    },
+                 ],
+            });
+        });
+
     });
 
     function display(states_10m){
@@ -826,6 +940,8 @@
         // set the fill color to green
         d3.selectAll("path").style("fill", "#90EE90");
     }
+
+   // ranking_data_tbl
 
 
 </script>
