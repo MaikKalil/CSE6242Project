@@ -149,68 +149,52 @@ class rankHandler:
                 else:
                     filtered['states'] = 1
             elif constraint == 'cost':
-                if data_dict['types']['val'] == 'Public':
-                    if data_dict[constraint]['val'][1] == '1':  # if HI 0-$30K
-                        filtered = filtered.rename(columns={'NPT41_PUB': 'NPT'})  # To identify the column to display
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    elif data_dict[constraint]['val'][1] == '2':  # if HI >$30K <=$48K
-                        filtered = filtered.rename(columns={'NPT42_PUB': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    elif data_dict[constraint]['val'][1] == '3':  # if HI >$48K <=$75K
-                        filtered = filtered.rename(columns={'NPT43_PUB': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    elif data_dict[constraint]['val'][1] == '4':  # if HI >$75K <=$110K
-                        filtered = filtered.rename(columns={'NPT44_PUB': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    else:  # HI >$110k
-                        filtered = filtered.rename(columns={'NPT45_PUB': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                else:  # Private
-                    if data_dict[constraint]['val'][1] == '1':  # if HI 0-$30K
-                        filtered = filtered.rename(columns={'NPT41_PRIV': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    elif data_dict[constraint]['val'][1] == '2':  # if HI >$30K <=$48K
-                        filtered = filtered.rename(columns={'NPT42_PRIV': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    elif data_dict[constraint]['val'][1] == '3':  # if HI >$48K <=$75K
-                        filtered = filtered.rename(columns={'NPT43_PRIV': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    elif data_dict[constraint]['val'][1] == '4':  # if HI >$75K <=$110K
-                        filtered = filtered.rename(columns={'NPT44_PRIV': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
-                    else:  # HI >$110k
-                        filtered = filtered.rename(columns={'NPT45_PRIV': 'NPT'})
-                        if int(data_dict[constraint]['val'][0]) != 0:
-                            filtered['cost'] = (filtered['NPT'] <= int(data_dict[constraint]['val'][0])).astype(int)
-                        else:
-                            filtered['cost'] = 1
+                if data_dict[constraint]['val'][1] == '1':  # if HI 0-$30K
+                    filtered = filtered.rename(
+                        columns={'NPT41_PUB': 'NPT_PUB', 'NPT41_PRIV': 'NPT_PRIV'})  # To identify the column to display
+                    if int(data_dict[constraint]['val'][0]) != 0:
+                        filtered['cost_pub'] = (filtered['NPT_PUB'] <= int(data_dict[constraint]['val'][0])).astype(int)
+                        filtered['cost_priv'] = (filtered['NPT_PRIV'] <= int(data_dict[constraint]['val'][0])).astype(
+                            int)
+                    else:
+                        filtered['cost_pub'] = 1
+                        filtered['cost_priv'] = 1
+                elif data_dict[constraint]['val'][1] == '2':  # if HI >$30K <=$48K
+                    filtered = filtered.rename(columns={'NPT42_PUB': 'NPT_PUB', 'NPT42_PRIV': 'NPT_PRIV'})
+                    if int(data_dict[constraint]['val'][0]) != 0:
+                        filtered['cost_pub'] = (filtered['NPT_PUB'] <= int(data_dict[constraint]['val'][0])).astype(int)
+                        filtered['cost_priv'] = (filtered['NPT_PRIV'] <= int(data_dict[constraint]['val'][0])).astype(
+                            int)
+                    else:
+                        filtered['cost_pub'] = 1
+                        filtered['cost_priv'] = 1
+                elif data_dict[constraint]['val'][1] == '3':  # if HI >$48K <=$75K
+                    filtered = filtered.rename(columns={'NPT43_PUB': 'NPT_PUB', 'NPT43_PRIV': 'NPT_PRIV'})
+                    if int(data_dict[constraint]['val'][0]) != 0:
+                        filtered['cost_pub'] = (filtered['NPT_PUB'] <= int(data_dict[constraint]['val'][0])).astype(int)
+                        filtered['cost_priv'] = (filtered['NPT_PRIV'] <= int(data_dict[constraint]['val'][0])).astype(
+                            int)
+                    else:
+                        filtered['cost_pub'] = 1
+                        filtered['cost_priv'] = 1
+                elif data_dict[constraint]['val'][1] == '4':  # if HI >$75K <=$110K
+                    filtered = filtered.rename(columns={'NPT44_PUB': 'NPT_PUB', 'NPT44_PRIV': 'NPT_PRIV'})
+                    if int(data_dict[constraint]['val'][0]) != 0:
+                        filtered['cost_pub'] = (filtered['NPT_PUB'] <= int(data_dict[constraint]['val'][0])).astype(int)
+                        filtered['cost_priv'] = (filtered['NPT_PRIV'] <= int(data_dict[constraint]['val'][0])).astype(
+                            int)
+                    else:
+                        filtered['cost_pub'] = 1
+                        filtered['cost_priv'] = 1
+                else:  # HI >$110k
+                    filtered = filtered.rename(columns={'NPT45_PUB': 'NPT_PUB', 'NPT45_PRIV': 'NPT_PRIV'})
+                    if int(data_dict[constraint]['val'][0]) != 0:
+                        filtered['cost_pub'] = (filtered['NPT_PUB'] <= int(data_dict[constraint]['val'][0])).astype(int)
+                        filtered['cost_priv'] = (filtered['NPT_PRIV'] <= int(data_dict[constraint]['val'][0])).astype(
+                            int)
+                    else:
+                        filtered['cost_pub'] = 1
+                        filtered['cost_priv'] = 1
             elif constraint == 'field':
                 if data_dict[constraint]['val'] != '':  # Ignore filter on Field if none specified by user
                     # First merge on degree/field constraint to get valid UNITIDs or universities that offer major
@@ -315,14 +299,11 @@ class rankHandler:
                 else:
                     filtered['missions'] = 1
 
-        columns = ['UNITID', 'INSTNM', 'ZIP', 'CITY', 'STABBR', 'LATITUDE', 'LONGITUDE', 'NPT', 'NPT4_PUB', 'NPT4_PRIV',
-                   'DISTANCE_MI',
-                   'SATMT25', 'SATMT75', 'SATVR25', 'SATVR75', 'ACTCM25', 'ACTCM75', 'EARN_NE_MDN_3YR',
-                   'MD_EARN_WNE_P10', 'ADM_RATE',
-                   'GRAD_RATE', 'UGDS', 'CONTROL', 'LOCALE', 'RELIGION',
-                   'input_zip', 'states', 'cost', 'field', 'degree', 'sat_math', 'sat_cr', 'act', 'salary3', 'salary10',
-                   'ar', 'gr', 'sizes', 'types',
-                   'urban', 'religs', 'missions']
+        columns =  ['UNITID','INSTNM','ZIP','CITY','STABBR','LATITUDE','LONGITUDE','NPT_PUB','NPT_PRIV','NPT4_PUB','NPT4_PRIV','DISTANCE_MI',
+               'SATMT25', 'SATMT75', 'SATVR25', 'SATVR75', 'ACTCM25', 'ACTCM75', 'EARN_NE_MDN_3YR', 'MD_EARN_WNE_P10', 'ADM_RATE',
+               'GRAD_RATE', 'UGDS', 'CONTROL', 'LOCALE', 'RELIGION',
+               'input_zip','states','cost_pub','cost_priv','field','degree','sat_math','sat_cr','act','salary3','salary10','ar','gr', 'sizes','types',
+               'urban','religs','missions']
         return filtered[columns]
 
     @staticmethod
@@ -337,8 +318,17 @@ class rankHandler:
         # Consolidate salary amount columns to 1
         base_table['salary_amt'] = base_table.apply(
             lambda row: row['EARN_NE_MDN_3YR'] if row['salary_selected'] == 'salary3' else row['MD_EARN_WNE_P10'],
-            axis=1
-        )
+            axis=1)
+        # Transform Cost columns
+        base_table['cost'] = base_table.apply(
+            lambda row: row['cost_priv'] if pd.isna(row['NPT_PUB']) else row['cost_pub'], axis=1)
+        base_table['NPT'] = base_table.apply(
+            lambda row: row['NPT4_PUB'] if pd.isna(row['NPT_PUB']) and pd.isna(row['NPT_PRIV']) and pd.isna(
+                row['NPT4_PRIV'])
+            else row['NPT4_PRIV'] if pd.isna(row['NPT_PUB']) and pd.isna(row['NPT_PRIV']) and pd.isna(row['NPT4_PUB'])
+            else row['NPT_PRIV'] if pd.isna(row['NPT_PUB'])
+            else row['NPT_PUB'], axis=1)
+
         base_table['num_hard_met'] = base_table[hard_list].sum(axis=1, skipna=True)
         filtered = base_table[base_table['num_hard_met'] == accept_thres]
         del filtered['num_hard_met']
@@ -346,6 +336,10 @@ class rankHandler:
         del filtered['MD_EARN_WNE_P10']
         del filtered['salary3']
         del filtered['salary10']
+        del filtered['NPT_PUB']
+        del filtered['NPT_PRIV']
+        del filtered['cost_pub']
+        del filtered['cost_priv']
         return filtered
 
     @staticmethod
@@ -395,7 +389,7 @@ class rankHandler:
             limit_match = 25
         else:
             limit_match = 30
-        query = f"""SELECT RANK() OVER (ORDER BY RATING DESC) as RANKING, INSTNM as [NAME], [ZIP], 
+        query = f"""SELECT RANK() OVER (ORDER BY RATING, INSTNM DESC) as RANKING, INSTNM as [NAME], [ZIP], 
            CITY, STABBR as STATE, DISTANCE_MI as [DISTANCE IN MILES], LATITUDE, LONGITUDE,
            NPT as [AVG COST BASED ON HI], coalesce(NPT4_PUB, NPT4_PRIV) [OVERALL AVG COST], SATMT25 as [SAT MATH 25TH PCTL], 
            SATMT75 as [SAT MATH 75th PCTL], SATVR25 as [SAT CR 25TH PCTL], SATVR75 as [SAT CR 75TH PCTL], 
@@ -404,7 +398,7 @@ class rankHandler:
            case when degree = '1' then 'Y' else 'N' end [DEGREE OFFERED], case when missions = '1' then 'Y' else 'N' end [RELIGIOUS AFFILIATION], 
            case when salary_selected = 'salary3' then '3YR MEDIAN EARNINGS' else '10YR MEDIAN EARNINGS' end [SALARY REPORTED], salary_amt [SALARY]
            FROM df
-           ORDER BY RATING DESC
+           ORDER BY RATING, INSTNM DESC
            LIMIT {limit_match}"""
         sqldf(query).to_csv(filename, index=False)
 @app.route('/')
