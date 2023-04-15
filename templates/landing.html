@@ -587,8 +587,8 @@
             if (d.CITY && d.STATE) {
                 html += "Location: " + d.CITY + ", " + d.STATE +  "<br>";
             }
-            if (d.SIZE) {
-                html += "Size: " + parseInt(d.SIZE) + "<br>";
+            if (d["ENROLLMENT SIZE"]) {
+                html += "Enrollment: " + parseInt(d["ENROLLMENT SIZE"]).toLocaleString() + "<br>";
             }
             if (d.LOCALE) {
                 html += "Urbanicity: " + d.LOCALE +"<br>";
@@ -602,11 +602,11 @@
             if (d["AVG COST BASED ON HI"]) {
                 html += "Average Tuition: " + "$" + parseInt(d["AVG COST BASED ON HI"]).toLocaleString() +"<br>";
             }
-            if (d['10YR MEDIAN EARNINGS']) {
-                html += "Median Earnings: $" + parseInt(d['10YR MEDIAN EARNINGS']).toLocaleString() + "<br>";
+            if (d['SALARY']) {
+                html += "Average Salary: $"  + parseInt(d['SALARY']).toLocaleString() + "<br>";
             }
-            if (d["SAT MATH 25TH PCTL"] && d['SAT MATH 75TH PCTL']) {
-                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d['SAT MATH 75TH PCTL']) + "<br>";
+            if (d["SAT MATH 25TH PCTL"] && d["SAT MATH 75th PCTL"]) {
+                html += "Mid 50% SAT MATH: " + parseInt(d["SAT MATH 25TH PCTL"]) + "-" + parseInt(d["SAT MATH 75th PCTL"]) + "<br>";
             }
             if (d["SAT CR 25TH PCTL"] && d['SAT CR 75TH PCTL']) {
                 html += "Mid 50% SAT CR: " + parseInt(d["SAT CR 25TH PCTL"]) + "-" + parseInt(d['SAT CR 75TH PCTL']) + "<br>";
