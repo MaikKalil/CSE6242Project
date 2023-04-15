@@ -43,40 +43,18 @@
             margin-left: 10px;
         }
 
-		/* Region 2 */
-		.region2 {
-            height: calc(100vh - 100px);
-            width: 35%;
-            background-color: #aaa;
-            float: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 20px;
-        }
-
-		/* Region 3 */
-		.region3 {
-            height: calc(75% - 60px);
-            width: calc(65% - 20px);
-            background-color: #999;
-            float: left;
-            margin-left: 20px;
-            margin-bottom: 20px;
-        }
-
 		/* Region 4 */
 		.region4 {
-            height: calc(25% - 20px);
-            width: calc(75% - 20px);
-            background-color: #777;
+            height: calc(100%);
+            width: calc(95%);
+            margin-top: 0px;
             float: left;
             margin-left: 20px;
         }
 
         /* Form */
         form {
-            width: 40%;
+            width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -109,6 +87,37 @@
             margin-bottom: 10px;
         }
 
+        /* Fix the first two columns in place */
+        table.dataTable thead tr th:nth-child(-n+2),
+        table.dataTable tbody tr td:nth-child(-n+2) {
+          position: sticky;
+          left: 0;
+          z-index: 1;
+          background-color: #fff;
+          padding-left: 16px; /* adjust for the width of the second column */
+        }
+
+        /* Fix the second column in place */
+        table.dataTable thead tr th:nth-child(2),
+        table.dataTable tbody tr td:nth-child(2) {
+          position: sticky;
+          left: 60px; /* adjust as needed */
+          z-index: 1;
+          background-color: #fff;
+        }
+
+        /* Allow the rest of the columns to scroll horizontally */
+        table.dataTable {
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+
+        /* Style the table cells */
+        table.dataTable td,
+        table.dataTable th {
+          padding: 8px;
+        }
+
 	</style>
 </head>
 <link rel="stylesheet" href="/static/landing/style.css"/>
@@ -132,7 +141,7 @@
     </div>
 
     <div id="container" style="display: flex">
-        <div id="left_container" style="display: flex;">
+        <div id="left_container" style="display: flex; height: 600px;">
             <form id="form"  method="post" action="{{url_for('update')}}">
             <div>
                 <label for="name">States:</label>
@@ -480,17 +489,16 @@
             </div>
     </form>
         </div>
-        <div id="right_container" style="display: flex;">
-            <div id="map" style="width: 100%; height:70%"></div>
-            <div id="left-panel" class="recommended-schools" style="width: 95%; height: calc(35% - 20px); margin-top: 20px;">
+        <div id="right_container" style="display: flex; height: 700px;">
+            <div id="map" style="width: 100%; height:100%"></div>
+        </div>
+    </div>
+    <div class="region4">
+        <div id="left-panel" class="recommended-schools" style="width: 100%; height: 100%; margin-top: -300px;">
                 <h2>Recommended Schools</h2>
                 <table id="RankTbl" class="display"  HEIGHT="100%"></table>
                 </div>
-            </div>
-        </div>
     </div>
-
-
 
 <script>
     var sat_math_slider = document.getElementById("sat_math");
@@ -623,38 +631,9 @@
     // Attach the tip to your SVG
     svg.call(tip);
 
-/* Original promise code
-    var promises = [
-        d3.json("/static/landing/states-10m.json"),
-        d3.csv("/static/landing/ranked_results.csv")
-    ]
-
- */
-    // Zubaid's Code
-    // Function to convert d3.csv array-of-dicts to list-of-array
-   /* function convertToList(filePath) {
-        // Initialize the list of arrays
-        let listOfArrays = [];
-        // Read the CSV file
-        d3.csv(filePath, (data) => {
-            // Convert the data into an array
-            let array = Object.values(data);
-            // Add the array to the list of arrays
-            listOfArrays.push(array);
-        });
-        // Return the list of arrays
-        return listOfArrays;
-    } */
-
     // Zubaid's code - individual initialize promises distinctly
     var promise1 = d3.json("/static/landing/states-10m.json");
     var promise2 = d3.csv("/static/landing/ranked_results.csv");
-    //var promise3 = convertToList("ranked_results.csv");
-    //console.log(promise2);
-
-
-// Original code
-/*    Promise.all(promises).then(function(array) { */
 
 //Zubaid code - changing promise to take in array
     Promise.all([promise1,promise2]).then(function(array) {
@@ -820,61 +799,13 @@
             .text(function(d) { return d.label + " " + d.value; });
 
 
-        // Define the number of items to show per page
-        var pageSize = 5;
-
-        // Define the current page number
-        var currentPage = 0;
-
-        // Define the navigation buttons
-        var prevButton = d3.select("#school-list-prev");
-        var nextButton = d3.select("#school-list-next");
-
-        // Define the update function for the school list
-        function updateSchoolList() {
-            // Hide all schools
-            schools.style("display", "none");
-
-            // Show the schools for the current page
-            schools.filter(function(d, i) {
-                    return i >= currentPage * pageSize && i < (currentPage + 1) * pageSize;
-            }).style("display", "block");
-
-            // Disable the previous button if we're on the first page
-            if (currentPage === 0) {
-                prevButton.attr("disabled", true);
-            } else {
-                prevButton.attr("disabled", null);
-            }
-
-            // Disable the next button if we're on the last page
-            if ((currentPage + 1) * pageSize >= schools.size()) {
-                nextButton.attr("disabled", true);
-            } else {
-                nextButton.attr("disabled", null);
-            }
-        }
-
-        // Add a click event listener to the previous button
-        prevButton.on("click", function() {
-            currentPage--;
-            updateSchoolList();
-        });
-
-        // Add a click event listener to the next button
-        nextButton.on("click", function() {
-            currentPage++;
-            updateSchoolList();
-        });
-
-        // Initialize the school list
-        updateSchoolList();
-
         $(document).ready(function () {
             $('#RankTbl').DataTable({
                 data: listOfArrays,
-                scrollY: 200,
+                scrollY: 600,
                 scrollX: true,
+                pageLength: 30, // set the default number of entries to display
+                lengthMenu: [[5, 10, 15, 20, 25, 30], [5, 10, 15, 20, 25, 30]], // set the available pageLength values
                  columns: [
                      { title: 'RANKING' },
                      { title: 'NAME' },
@@ -905,6 +836,10 @@
                      { title: 'SALARY' },
                  ],
                  columnDefs: [
+                     {
+                        target: 2,
+                        visible: false,
+                    },
                     {
                         target: 5,
                         visible: false,
@@ -917,7 +852,11 @@
                         target: 7,
                         visible: false,
                     },
-                 ],
+                     {
+                        target: 24,
+                        visible: false,
+                    }
+                 ]
             });
         });
 
