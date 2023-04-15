@@ -361,6 +361,9 @@ class rankHandler:
         sat_math = int(data_dict['sat_math']['val'])
         sat_cr = int(data_dict['sat_cr']['val'])
         act = int(data_dict['act']['val'])
+        max_sal = df['salary_amt'].max()
+        max_ar = df['ADM_RATE'].max()
+        max_gr = df['GRAD_RATE'].max()
         df["zip_norm"] = (max_dist - df['DISTANCE_MI']) / max_dist
         df["cost_norm"] = (max_cost - df['NPT']) / max_cost
         df["math_norm"] = df.apply(lambda row: (sat_math - row['SATMT25']) / row['SATMT25'] if row['SATMT25'] > sat_math
@@ -369,6 +372,9 @@ class rankHandler:
                                                                 else (sat_cr - row['SATVR25']) / sat_cr, axis=1)
         df["act_norm"] = df.apply(lambda row: (act - row['ACTCM25']) / row['ACTCM25'] if row['ACTCM25'] > act
                                                                 else (act - row['ACTCM25']) / act, axis=1)
+        df["sal_norm"] = df['salary_amt'] / max_sal
+        df["gr_norm"] = df['GRAD_RATE'] / max_gr
+        df["ar_norm"] = df['ADM_RATE'] / max_ar
         return df
 
     @staticmethod
@@ -539,9 +545,9 @@ def update():
         'input_zip': {'pref': int(data['input_zip']['pref']), 'col': 'zip_norm'},
         'field': {'pref': int(data['field']['pref']), 'col': 'field'},
         'cost': {'pref': int(data['cost']['pref']), 'col': 'cost_norm'},
-        'salary': {'pref': int(data['salary']['pref']), 'col': 'salary'},
-        'ar': {'pref': int(data['ar']['pref'])/100.0, 'col': 'ar'},
-        'gr': {'pref': int(data['gr']['pref'])/100.0, 'col': 'gr'},
+        'salary': {'pref': int(data['salary']['pref']), 'col': 'sal_norm'},
+        'ar': {'pref': int(data['ar']['pref'])/100.0, 'col': 'ar_norm'},
+        'gr': {'pref': int(data['gr']['pref'])/100.0, 'col': 'gr_norm'},
         'types': {'pref': int(data['types']['pref']), 'col': 'types'},
         'sizes': {'pref': int(data['sizes']['pref']), 'col': 'sizes'},
         'urban': {'pref': int(data['urban']['pref']), 'col': 'urban'},
