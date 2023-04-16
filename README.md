@@ -8,10 +8,7 @@
   <h1 align="center">College Selection Made Easy</h1>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
+    A better way to search and compare colleges!
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
     ·
@@ -139,15 +136,17 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
+The roadmap is intended to highlight opportunities for future development
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+- [x] Build local web app
+- [ ] Add additional inputs for test scores to allow user to specify how these scores are normalized in RankHandler. \
+      (e.g. Currently the 25th percentile is used but perhaps the user would prefer the 75th percentile to see schools with higher test scores.)   
+- [ ] Add additional preferences for sports and/or college rankings. \
+      (NCAA and U.S. News World College rankings would require permission.)
+- [ ] Deploy web app to cloud service such MS Azure to expand access to a wider audience. \
+      (Production deployment will require modification of code to handle concurrent users.)
+
+See the [open issues](https://github.com/MaikKalil/CSE6242Project/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
