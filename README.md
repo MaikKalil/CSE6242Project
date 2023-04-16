@@ -184,7 +184,11 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 Michael Jones - [Linkedin](linkedin.com/in/mikekaliljones) - mkjones@gatech.edu \
-William Loveless - [Linkedin](linkedin.com/in/williamloveless1) - hloveless3@gatech.edu
+William Loveless - [Linkedin](linkedin.com/in/williamloveless1) - hloveless3@gatech.edu \
+Mallory Herrmann - [Linkedin](linkedin.com/in/mallory-herrmann-412379171) - mherrmann@gatech.edu \
+Steffan Seok - [Linkedin](linkedin.com/in/steffan-seok) - sseok3@gatech.edu \
+Zubaid Mushfiq - [Linkedin](linkedin.com/in/zubaid-mushfiq-a09647122) - zmushfiq3@gatech.edu
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
