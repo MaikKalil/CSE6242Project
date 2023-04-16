@@ -89,16 +89,12 @@ Below are a few of the many technologies and libraries our team referenced to co
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+The web app can be run locally using Python. Download Pycharm for an easy-to-use IDE that can have you up and running in no time with the following simple steps. 
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* [Pycharm Pro](https://www.jetbrains.com/pycharm/download/#section=windows) (open source community version will work too) 
+  - The latest version of Python is bundled with installation.
 
 ### Installation
 
