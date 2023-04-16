@@ -187,6 +187,7 @@ William Loveless - [Linkedin](linkedin.com/in/williamloveless1) - hloveless3@gat
 Mallory Herrmann - [Linkedin](linkedin.com/in/mallory-herrmann-412379171) - mherrmann@gatech.edu \
 Steffan Seok - [Linkedin](linkedin.com/in/steffan-seok) - sseok3@gatech.edu \
 Zubaid Mushfiq - [Linkedin](linkedin.com/in/zubaid-mushfiq-a09647122) - zmushfiq3@gatech.edu
+Ankur Falor - [Linkedin](linkedin.com/in/ankurfalor) - afalor3@gatech.edu
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
