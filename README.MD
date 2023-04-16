@@ -98,24 +98,42 @@ The web app can be run locally using Python. Download Pycharm for an easy-to-use
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+1. [Clone repository | PyCharm Documentation (jetbrains.com)](https://www.jetbrains.com/help/pycharm/cloning-repository.html)
+   ```sh
+   git clone https://github.com/MaikKalil/CSE6242Project.git
+   ```
+2. Create an environment for the project
+   
+   Bottom right select `No interpreter` > `Add New Interpreter` > `Add Local Interpreter`
+   
+    <img src="screenshots/Add_Python_Interpreter.png" alt="interpreter" width="624" height="197">
+    
+   Notice you will now see a `venv` folder underneath the `templates` folder in the Project view in the top left corner of your window.
+   
+  
+3. Install package requirements `requirements.txt`
+   
+   Open the app.py file by double-clicking on file in Project view
+   
+   <img src="screenshots/Install_Packages.png" alt="install" width="624" height="250">
+   
+   You should see warnings to install 13 package dependencies. Select `Install requirements` to install the modules listed in the requirements file along with their dependencies. 
+   
+4. Edit run configuration
+   
+   Top right select `Current File` > `Edit Configurations` > `Add New Run Configuration` > Select `Python`
+   
+    <img src="screenshots/Edit_Configuration.png" alt="config" width="624" height="422">
+    
+   In the script path navigate to the `app.py` file in the project folder. Make sure the Python interpreter matches the interpreter selected at the bottom of the screen before selecting `OK`.
+   
+### Running
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+Select the play button to execute `app.py`. Python will create a local web server with a link in the Run screen to the login page of the web application.
+
+<img src="screenshots/Run_app.png" alt="run" width="624" height="494">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- USAGE EXAMPLES -->
