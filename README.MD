@@ -141,6 +141,7 @@ The roadmap is intended to highlight opportunities for future development
 - [x] Build local web app
 - [ ] Add additional inputs for test scores to allow user to specify how these scores are normalized in RankHandler. \
       (e.g. Currently the 25th percentile is used but perhaps the user would prefer the 75th percentile to see schools with higher test scores.)   
+- [ ] Modify calc_dist() function in RankHandler to use driving distance from an api like Google Maps instead of geodesic distance from geopy. 
 - [ ] Add additional preferences for sports and/or college rankings. \
       (NCAA and U.S. News World College rankings would require permission.)
 - [ ] Deploy web app to cloud service such MS Azure to expand access to a wider audience. \
