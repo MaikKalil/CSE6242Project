@@ -138,9 +138,7 @@ Select the play button to execute `app.py`. Python will create a local web serve
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+Please refer to the [Usage documentation](https://example.com) for explanations on how to use the tool and how the results are derived. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
