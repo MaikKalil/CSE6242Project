@@ -154,6 +154,9 @@ The roadmap is intended to highlight opportunities for future development
       (e.g. Currently the 25th percentile is used but perhaps the user would prefer the 75th percentile to see schools with higher test scores.)   
 - [ ] Modify calc_dist() function in RankHandler to use driving distance from an api like Google Maps instead of geodesic distance from geopy. 
 - [ ] Add functionality for users to include specific schools in their search results (a current feature in the College Scorecard).
+- [ ] Add user password protection and stricter validation of email addresses.
+- [ ] Fix the landing page header to remain frozen at the top of the webpage when user scrolls.
+- [ ] Add functionality for users to include specific schools in their search results (a current feature in the College Scorecard).
 - [ ] Add additional preferences for sports and/or college rankings. \
       (NCAA and U.S. News World College rankings would require permission.)
 - [ ] Deploy web app to cloud service such MS Azure to expand access to a wider audience. \
