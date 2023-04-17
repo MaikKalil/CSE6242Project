@@ -35,6 +35,7 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#running">Running</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
@@ -51,18 +52,16 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+For many high school students, one of the first major decisions they must make is choosing where to 
+attend college. Many low-income and minority students lack the resources necessary to make informed 
+decisions about college, resulting in limited access to higher education. To address this problem, 
+our objective is to create an interactive dashboard that allows prospective college students to compare 
+and discover colleges based on their profile and preferences. If we can equip students with knowledge of the 
+differences in institution types, admission requirements, cost estimates, and other institutional factors, we 
+can help students choose schools that fit their needs, which increases the likelihood that they attend college. 
+Ultimately, our goal is to provide equitable access to college decision-making resources and increase opportunities 
+for underrepresented students in higher education by providing an interactive tool to help visualize, search, and rank 
+schools in the College Scorecard dataset. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -98,24 +97,42 @@ The web app can be run locally using Python. Download Pycharm for an easy-to-use
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+1. [Clone repository | PyCharm Documentation (jetbrains.com)](https://www.jetbrains.com/help/pycharm/cloning-repository.html)
+   ```sh
+   git clone https://github.com/MaikKalil/CSE6242Project.git
+   ```
+2. Create an environment for the project
+   
+   Bottom right select `No interpreter` > `Add New Interpreter` > `Add Local Interpreter`
+   
+    <img src="screenshots/Add_Python_Interpreter.png" alt="interpreter" width="624" height="197">
+    
+   Notice you will now see a `venv` folder underneath the `templates` folder in the Project view in the top left corner of your window.
+   
+  
+3. Install package requirements `requirements.txt`
+   
+   Open the app.py file by double-clicking on file in Project view
+   
+   <img src="screenshots/Install_Packages.png" alt="install" width="624" height="250">
+   
+   You should see warnings to install 13 package dependencies. Select `Install requirements` to install the modules listed in the requirements file along with their dependencies. 
+   
+4. Edit run configuration
+   
+   Top right select `Current File` > `Edit Configurations` > `Add New Run Configuration` > Select `Python`
+   
+    <img src="screenshots/Edit_Configuration.png" alt="config" width="624" height="422">
+    
+   In the script path navigate to the `app.py` file in the project folder. Make sure the Python interpreter matches the interpreter selected at the bottom of the screen before selecting `OK`.
+   
+### Running
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/your_username_/Project-Name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+Select the play button to execute `app.py`. Python will create a local web server with a link in the Run screen to the login page of the web application.
+
+<img src="screenshots/Run_app.png" alt="run" width="624" height="494">
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- USAGE EXAMPLES -->
@@ -134,10 +151,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 The roadmap is intended to highlight opportunities for future development
 
-- [x] Build local web app
+- [x] Build local web app that ranks schools based on user preferences.
 - [ ] Add additional inputs for test scores to allow user to specify how these scores are normalized in RankHandler. \
       (e.g. Currently the 25th percentile is used but perhaps the user would prefer the 75th percentile to see schools with higher test scores.)   
 - [ ] Modify calc_dist() function in RankHandler to use driving distance from an api like Google Maps instead of geodesic distance from geopy. 
+- [ ] Add functionality for users to include specific schools in their search results (a current feature in the College Scorecard).
 - [ ] Add additional preferences for sports and/or college rankings. \
       (NCAA and U.S. News World College rankings would require permission.)
 - [ ] Deploy web app to cloud service such MS Azure to expand access to a wider audience. \
@@ -197,6 +215,8 @@ Ankur Falor - [Linkedin](linkedin.com/in/ankurfalor) - afalor3@gatech.edu
 Special thanks to the United States Department of Education for providing a comprehensive data set on colleges.  
 
 * [USDE College Scorecard](https://collegescorecard.ed.gov/)
+* [Technical Documentation: College Scorecard Institution-Level Data](https://collegescorecard.ed.gov/assets/InstitutionDataDocumentation.pdf)
+* [Technical Documentation: College Scorecard Data by Field of Study](https://collegescorecard.ed.gov/assets/FieldOfStudyDataDocumentation.pdf)
 * [MS Azure Flask Webapp Quickstart Guide](https://github.com/Azure-Samples/msdocs-python-flask-webapp-quickstart)
 * [Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [Markdown Badges 1](https://github.com/Ileriayo/markdown-badges)
