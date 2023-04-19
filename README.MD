@@ -138,7 +138,7 @@ Select the play button to execute `app.py`. Python will create a local web serve
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Please refer to the [Usage documentation](https://example.com) for explanations on how to use the tool and how the results are derived. 
+Please refer to the [Usage documentation](https://github.com/MaikKalil/CSE6242Project/blob/main/Usage.pdf) for explanations on how to use the tool and how the results are derived. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
