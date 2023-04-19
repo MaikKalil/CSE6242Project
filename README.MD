@@ -138,9 +138,7 @@ Select the play button to execute `app.py`. Python will create a local web serve
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+Please refer to the [Usage documentation](https://example.com) for explanations on how to use the tool and how the results are derived. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -155,6 +153,9 @@ The roadmap is intended to highlight opportunities for future development
 - [ ] Add additional inputs for test scores to allow user to specify how these scores are normalized in RankHandler. \
       (e.g. Currently the 25th percentile is used but perhaps the user would prefer the 75th percentile to see schools with higher test scores.)   
 - [ ] Modify calc_dist() function in RankHandler to use driving distance from an api like Google Maps instead of geodesic distance from geopy. 
+- [ ] Add functionality for users to include specific schools in their search results (a current feature in the College Scorecard).
+- [ ] Add user password protection and stricter validation of email addresses.
+- [ ] Fix the landing page header to remain frozen at the top of the webpage when user scrolls.
 - [ ] Add functionality for users to include specific schools in their search results (a current feature in the College Scorecard).
 - [ ] Add additional preferences for sports and/or college rankings. \
       (NCAA and U.S. News World College rankings would require permission.)
@@ -217,6 +218,7 @@ Special thanks to the United States Department of Education for providing a comp
 * [USDE College Scorecard](https://collegescorecard.ed.gov/)
 * [Technical Documentation: College Scorecard Institution-Level Data](https://collegescorecard.ed.gov/assets/InstitutionDataDocumentation.pdf)
 * [Technical Documentation: College Scorecard Data by Field of Study](https://collegescorecard.ed.gov/assets/FieldOfStudyDataDocumentation.pdf)
+* [Zip Code Lat Lon: https://simplemaps.com/data/us-zips](https://simplemaps.com/data/us-zips)
 * [MS Azure Flask Webapp Quickstart Guide](https://github.com/Azure-Samples/msdocs-python-flask-webapp-quickstart)
 * [Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [Markdown Badges 1](https://github.com/Ileriayo/markdown-badges)
