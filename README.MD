@@ -218,6 +218,7 @@ Special thanks to the United States Department of Education for providing a comp
 * [USDE College Scorecard](https://collegescorecard.ed.gov/)
 * [Technical Documentation: College Scorecard Institution-Level Data](https://collegescorecard.ed.gov/assets/InstitutionDataDocumentation.pdf)
 * [Technical Documentation: College Scorecard Data by Field of Study](https://collegescorecard.ed.gov/assets/FieldOfStudyDataDocumentation.pdf)
+* [Zip Code Lat Lon: https://simplemaps.com/data/us-zips](https://simplemaps.com/data/us-zips)
 * [MS Azure Flask Webapp Quickstart Guide](https://github.com/Azure-Samples/msdocs-python-flask-webapp-quickstart)
 * [Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [Markdown Badges 1](https://github.com/Ileriayo/markdown-badges)
