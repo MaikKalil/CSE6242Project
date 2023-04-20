@@ -10,8 +10,6 @@
   <p align="center">
     A better way to search and compare colleges!
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
     <a href="https://github.com/MaikKalil/CSE6242Project/issues">Report Bug</a>
     ·
     <a href="https://github.com/MaikKalil/CSE6242Project/issues">Request Feature</a>
